@@ -1,0 +1,253 @@
+openapi: 3.0.2
+info:
+  title: QMS IAM API
+  description: QMS Identity and Access Management API.
+  version: 1.0.0
+paths:
+  /api/v1/auth/device:
+    get:
+      tags:
+        - auth
+      summary: Authorize Device
+      description: |-
+        Authorize a device to an application in context
+
+        Args:
+            application (str, optional): The application in context. Defaults to Header(..., convert_underscores = False).
+
+        Returns:
+            models.AuthorizeDeviceResponse: Authorization information such as deviceCode, and userCode.
+      operationId: authorizeDevice
+      parameters:
+        - required: true
+          schema:
+            title: Application
+            type: string
+          name: application
+          in: header
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorizeDeviceResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/auth/tokens:
+    post:
+      tags:
+        - auth
+      summary: Get Auth Tokens
+      description: |-
+        Gets the authorization tokens for the given device code and application in context
+
+        Args:
+            application (str, optional): The application in context. Defaults to Header(..., convert_underscores = False).
+            item (models.GetTokensPayload): The required payload
+
+        Returns:
+            models.GetTokensResponse: The authorization tokens information
+      operationId: getAuthTokens
+      parameters:
+        - required: true
+          schema:
+            title: Application
+            type: string
+          name: application
+          in: header
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetTokensPayload'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTokensResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/auth/token/refresh:
+    post:
+      tags:
+        - auth
+      summary: Get New Access Token
+      description: |-
+        Gets a new access token for the given refresh token and application in context
+
+        Args:
+            application (str, optional): The application in context. Defaults to Header(..., convert_underscores = False).
+            item (models.GetNewAccessTokenPayload): The required payload
+
+        Returns:
+            models.GetNewAccessTokenResponse: The new access token information
+      operationId: getNewAccessToken
+      parameters:
+        - required: true
+          schema:
+            title: Application
+            type: string
+          name: application
+          in: header
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetNewAccessTokenPayload'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetNewAccessTokenResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    AuthorizeDeviceResponse:
+      title: AuthorizeDeviceResponse
+      required:
+        - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AuthorizeDeviceResponseData'
+    AuthorizeDeviceResponseData:
+      title: AuthorizeDeviceResponseData
+      required:
+        - deviceCode
+        - userCode
+        - expiresIn
+        - interval
+        - verificationURI
+      type: object
+      properties:
+        deviceCode:
+          title: Devicecode
+          type: string
+        userCode:
+          title: Usercode
+          type: string
+        expiresIn:
+          title: Expiresin
+          type: integer
+        interval:
+          title: Interval
+          type: integer
+        verificationURI:
+          title: Verificationuri
+          type: string
+    GetNewAccessTokenPayload:
+      title: GetNewAccessTokenPayload
+      required:
+        - refreshToken
+      type: object
+      properties:
+        refreshToken:
+          title: Refreshtoken
+          type: string
+    GetNewAccessTokenResponse:
+      title: GetNewAccessTokenResponse
+      required:
+        - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetNewAccessTokenResponseData'
+    GetNewAccessTokenResponseData:
+      title: GetNewAccessTokenResponseData
+      required:
+        - accessToken
+        - expiresIn
+      type: object
+      properties:
+        accessToken:
+          title: Accesstoken
+          type: string
+        expiresIn:
+          title: Expiresin
+          type: integer
+    GetTokensPayload:
+      title: GetTokensPayload
+      required:
+        - deviceCode
+      type: object
+      properties:
+        deviceCode:
+          title: Devicecode
+          type: string
+    GetTokensResponse:
+      title: GetTokensResponse
+      required:
+        - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetTokensResponseData'
+    GetTokensResponseData:
+      title: GetTokensResponseData
+      required:
+        - accessToken
+        - refreshToken
+        - expiresIn
+        - refreshExpiresIn
+      type: object
+      properties:
+        accessToken:
+          title: Accesstoken
+          type: string
+        refreshToken:
+          title: Refreshtoken
+          type: string
+        expiresIn:
+          title: Expiresin
+          type: integer
+        refreshExpiresIn:
+          title: Refreshexpiresin
+          type: integer
+    HTTPValidationError:
+      title: HTTPValidationError
+      type: object
+      properties:
+        detail:
+          title: Detail
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    ValidationError:
+      title: ValidationError
+      required:
+        - loc
+        - msg
+        - type
+      type: object
+      properties:
+        loc:
+          title: Location
+          type: array
+          items:
+            type: string
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
