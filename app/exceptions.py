@@ -17,3 +17,7 @@ FORBIDDEN_ERROR = HTTPException(
   detail = constants.FORBIDDEN_ERROR_MESSAGE,
 )
 
+UNAUTHORIZED_ERROR = HTTPException(
+  status_code = constants.UNAUTHORIZED_ERROR_CODE,
+  detail = constants.UNAUTHORIZED_ERROR_MESSAGE,
+)

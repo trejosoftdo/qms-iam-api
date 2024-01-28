@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Header
+from fastapi import APIRouter, Depends, Header
 from . import handlers
 from . import models
 from . import constants
+from .. import helpers
 
 
 router = APIRouter()
@@ -9,6 +10,7 @@ router = APIRouter()
 
 @router.post(
     "/device",
+    dependencies=[Depends(helpers.validate_api_access)],
     tags = constants.TAGS,
     operation_id = constants.AUTHORIZE_DEVICE_OPERATION_ID,
     response_model = models.AuthorizeDeviceResponse
@@ -31,6 +33,7 @@ def authorize_device(
 
 @router.post(
     "/tokens",
+    dependencies=[Depends(helpers.validate_api_access)],
     tags = constants.TAGS,
     operation_id = constants.GET_AUTH_TOKENS_OPERATION_ID,
     response_model = models.GetTokensResponse
@@ -49,6 +52,7 @@ async def get_auth_tokens(payload: models.GetTokensPayload, application: str = H
 
 @router.post(
     "/token/refresh",
+    dependencies=[Depends(helpers.validate_api_access)],
     tags = constants.TAGS,
     operation_id = constants.GET_NEW_ACCESS_TOKEN_OPERATION_ID,
     response_model = models.GetNewAccessTokenResponse
@@ -68,6 +72,7 @@ async def get_new_access_token(payload: models.GetNewAccessTokenPayload, applica
 
 @router.post(
     "/token/validate",
+    dependencies=[Depends(helpers.validate_api_access)],
     tags = constants.TAGS,
     operation_id = constants.VALIDATE_ACCESS_TOKEN_OPERATION_ID,
     response_model = models.ValidateAccessTokenResponse
