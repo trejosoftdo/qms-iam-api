@@ -2,6 +2,13 @@ from pydantic import BaseModel
 
 class GetTokensPayload(BaseModel):
     deviceCode: str
+    clientId: str
+    clientSecret: str
+
+class AuthorizeDevicePayload(BaseModel):
+    clientId: str
+    clientSecret: str
+    scope: str
 
 class AuthorizeDeviceResponseData(BaseModel):
     deviceCode: str
@@ -24,6 +31,8 @@ class GetTokensResponse(BaseModel):
 
 class GetNewAccessTokenPayload(BaseModel):
     refreshToken: str
+    clientId: str
+    clientSecret: str
 
 class GetNewAccessTokenResponseData(BaseModel):
     accessToken: str
@@ -31,3 +40,17 @@ class GetNewAccessTokenResponseData(BaseModel):
 
 class GetNewAccessTokenResponse(BaseModel):
     data: GetNewAccessTokenResponseData
+
+
+class ValidateAccessTokenPayload(BaseModel):
+    clientId: str
+    clientSecret: str
+    expectedScope: str
+
+class ValidateAccessTokenResponseData(BaseModel):
+    isValid: bool
+    isAuthorized: bool
+    expectedScope: str
+
+class ValidateAccessTokenResponse(BaseModel):
+    data: ValidateAccessTokenResponseData
