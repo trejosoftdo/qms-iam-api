@@ -2,6 +2,8 @@ BEARER_PORTION = "Bearer "
 ACTIVE_PROPERTY = "active"
 SCOPE_PROPERTY = "scope"
 SCOPES_SEPARATOR = " "
+API_KEYS_SEPARATOR = ','
+IP_ADDRESSES_SEPARATOR = ','
 EMPTY_VALUE = ""
 
 DEVICE_TOKEN_GRANT_TYPE = 'urn:ietf:params:oauth:grant-type:device_code'
@@ -15,10 +17,6 @@ API_VERSION =  '1.0.0'
 
 # API routes prefixes
 AUTH_ROUTE_PREFIX = '/api/v1/auth'
-
-ALLOWED_METHODS = ['*']
-ALLOWED_HEADERS = ['*']
-ALLOWED_ORIGINS = ['*']
 
 # Environment names
 AUTH_API_BASE_URL_ENV_NAME = "AUTH_API_BASE_URL"

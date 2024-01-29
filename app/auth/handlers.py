@@ -146,12 +146,6 @@ def validate_access_token(realm: str, authorization: str, payload: models.Valida
   except:
     raise exceptions.INTERNAL_SERVER_ERROR
 
-  if not is_valid:
-    raise exceptions.INVALID_TOKEN_ERROR
-
-  if not is_authorized:
-    raise exceptions.FORBIDDEN_ERROR
-  
   return models.ValidateAccessTokenResponse(
     data = models.ValidateAccessTokenResponseData(
       isValid = is_valid,

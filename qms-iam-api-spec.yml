@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 paths:
   /api/v1/auth/device:
-    get:
+    post:
       tags:
         - auth
       summary: Authorize Device
@@ -13,7 +13,8 @@ paths:
         Authorize a device to an application in context
 
         Args:
-            application (str, optional): The application in context. Defaults to Header(..., convert_underscores = False).
+            payload (models.AuthorizeDevicePayload): The required payload
+            application (str, optional): The application in context
 
         Returns:
             models.AuthorizeDeviceResponse: Authorization information such as deviceCode, and userCode.
@@ -25,6 +26,18 @@ paths:
             type: string
           name: application
           in: header
+        - required: true
+          schema:
+            title: Api Key
+            type: string
+          name: api_key
+          in: header
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorizeDevicePayload'
+        required: true
       responses:
         '200':
           description: Successful Response
@@ -47,8 +60,8 @@ paths:
         Gets the authorization tokens for the given device code and application in context
 
         Args:
-            application (str, optional): The application in context. Defaults to Header(..., convert_underscores = False).
-            item (models.GetTokensPayload): The required payload
+            payload (models.GetTokensPayload): The required payload
+            application (str, optional): The application in context
 
         Returns:
             models.GetTokensResponse: The authorization tokens information
@@ -59,6 +72,12 @@ paths:
             title: Application
             type: string
           name: application
+          in: header
+        - required: true
+          schema:
+            title: Api Key
+            type: string
+          name: api_key
           in: header
       requestBody:
         content:
@@ -88,8 +107,8 @@ paths:
         Gets a new access token for the given refresh token and application in context
 
         Args:
-            application (str, optional): The application in context. Defaults to Header(..., convert_underscores = False).
-            item (models.GetNewAccessTokenPayload): The required payload
+            payload (models.GetNewAccessTokenPayload): The required payload
+            application (str, optional): The application in context
 
         Returns:
             models.GetNewAccessTokenResponse: The new access token information
@@ -100,6 +119,12 @@ paths:
             title: Application
             type: string
           name: application
+          in: header
+        - required: true
+          schema:
+            title: Api Key
+            type: string
+          name: api_key
           in: header
       requestBody:
         content:
@@ -120,8 +145,79 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/auth/token/validate:
+    post:
+      tags:
+        - auth
+      summary: Validate Access Token
+      description: |-
+        Validates a token checking if it has not expired and has the required scope
+
+        Args:
+            payload (models.ValidateAccessTokenPayload): The required payload
+            application (str, optional): The application in context
+            authorization (str, optional): The authorization access token
+
+        Returns:
+            models.ValidateAccessTokenResponse: The new access token information
+      operationId: validateAccessToken
+      parameters:
+        - required: true
+          schema:
+            title: Application
+            type: string
+          name: application
+          in: header
+        - required: true
+          schema:
+            title: Authorization
+            type: string
+          name: authorization
+          in: header
+        - required: true
+          schema:
+            title: Api Key
+            type: string
+          name: api_key
+          in: header
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateAccessTokenPayload'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateAccessTokenResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    AuthorizeDevicePayload:
+      title: AuthorizeDevicePayload
+      required:
+        - clientId
+        - clientSecret
+        - scope
+      type: object
+      properties:
+        clientId:
+          title: Clientid
+          type: string
+        clientSecret:
+          title: Clientsecret
+          type: string
+        scope:
+          title: Scope
+          type: string
     AuthorizeDeviceResponse:
       title: AuthorizeDeviceResponse
       required:
@@ -159,10 +255,18 @@ components:
       title: GetNewAccessTokenPayload
       required:
         - refreshToken
+        - clientId
+        - clientSecret
       type: object
       properties:
         refreshToken:
           title: Refreshtoken
+          type: string
+        clientId:
+          title: Clientid
+          type: string
+        clientSecret:
+          title: Clientsecret
           type: string
     GetNewAccessTokenResponse:
       title: GetNewAccessTokenResponse
@@ -189,10 +293,18 @@ components:
       title: GetTokensPayload
       required:
         - deviceCode
+        - clientId
+        - clientSecret
       type: object
       properties:
         deviceCode:
           title: Devicecode
+          type: string
+        clientId:
+          title: Clientid
+          type: string
+        clientSecret:
+          title: Clientsecret
           type: string
     GetTokensResponse:
       title: GetTokensResponse
@@ -232,6 +344,48 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ValidationError'
+    ValidateAccessTokenPayload:
+      title: ValidateAccessTokenPayload
+      required:
+        - clientId
+        - clientSecret
+        - expectedScope
+      type: object
+      properties:
+        clientId:
+          title: Clientid
+          type: string
+        clientSecret:
+          title: Clientsecret
+          type: string
+        expectedScope:
+          title: Expectedscope
+          type: string
+    ValidateAccessTokenResponse:
+      title: ValidateAccessTokenResponse
+      required:
+        - data
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ValidateAccessTokenResponseData'
+    ValidateAccessTokenResponseData:
+      title: ValidateAccessTokenResponseData
+      required:
+        - isValid
+        - isAuthorized
+        - expectedScope
+      type: object
+      properties:
+        isValid:
+          title: Isvalid
+          type: boolean
+        isAuthorized:
+          title: Isauthorized
+          type: boolean
+        expectedScope:
+          title: Expectedscope
+          type: string
     ValidationError:
       title: ValidationError
       required:
