@@ -1,4 +1,7 @@
 # QMS IAM API
+[![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/pylint-dev/pylint)
+![Build Status](https://github.com/trejosoftdo/qms-iam-api/actions/workflows/build.yml/badge.svg)
+
 
 ## Table of Contents
 - [Overview](#overview)
@@ -7,6 +10,7 @@
 - [Environment Variables](#environment-variables)
 - [Running the Application](#running-the-application)
 - [API Documentation](#api-documentation)
+- [Linting](#linting)
 - [Testing](#testing)
 
 ## Overview
@@ -82,6 +86,14 @@ The API will be accessible at http://localhost:5001.
 
 ## API Documentation
 Swagger UI: http://127.0.0.1:5001/docs
+
+## Linting
+Run the linting on the code using:
+
+```bash
+pylint ./app  --extension-pkg-whitelist='pydantic'
+```
+
 
 ## Testing
 Run the test suite using:

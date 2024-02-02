@@ -1,22 +1,26 @@
+"""General constants
+"""
+
 BEARER_PORTION = "Bearer "
 ACTIVE_PROPERTY = "active"
 SCOPE_PROPERTY = "scope"
 SCOPES_SEPARATOR = " "
-API_KEYS_SEPARATOR = ','
-IP_ADDRESSES_SEPARATOR = ','
+API_KEYS_SEPARATOR = ","
+IP_ADDRESSES_SEPARATOR = ","
 EMPTY_VALUE = ""
+TIMEOUT = 10
 
-DEVICE_TOKEN_GRANT_TYPE = 'urn:ietf:params:oauth:grant-type:device_code'
-REFRESH_TOKEN_GRANT_TYPE = 'refresh_token'
+DEVICE_TOKEN_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:device_code"
+REFRESH_TOKEN_GRANT_TYPE = "refresh_token"
 
 # API Metadata
-API_TITLE = 'QMS IAM API'
-API_SUMMARY = 'QMS Identity and Access Management API'
-API_DESCRIPTION = 'QMS Identity and Access Management API.'
-API_VERSION =  '1.0.0'
+API_TITLE = "QMS IAM API"
+API_SUMMARY = "QMS Identity and Access Management API"
+API_DESCRIPTION = "QMS Identity and Access Management API."
+API_VERSION = "1.0.0"
 
 # API routes prefixes
-AUTH_ROUTE_PREFIX = '/api/v1/auth'
+AUTH_ROUTE_PREFIX = "/api/v1/auth"
 
 # Environment names
 AUTH_API_BASE_URL_ENV_NAME = "AUTH_API_BASE_URL"

@@ -1,3 +1,6 @@
+"""Auth API constants
+"""
+
 TAGS = ["auth"]
 
 # Operation Ids
