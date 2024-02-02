@@ -1,4 +1,7 @@
 # QMS IAM API
+[![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/pylint-dev/pylint)
+![Build Status](https://github.com/trejosoftdo/qms-iam-api/actions/workflows/build.yml/badge.svg)
+
 
 ## Table of Contents
 - [Overview](#overview)
