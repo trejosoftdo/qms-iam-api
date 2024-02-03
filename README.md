@@ -94,10 +94,10 @@ Run the linting on the code using:
 pylint ./app  --extension-pkg-whitelist='pydantic'
 ```
 
-
 ## Testing
-Run the test suite using:
+Run the unit tests using:
 
 ```bash
-pytest
+cd app
+nosetests
 ```
