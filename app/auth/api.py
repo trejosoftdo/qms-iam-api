@@ -8,7 +8,7 @@ from .. import constants
 from . import models
 
 
-common_headers = {"Content-Type": "application/x-www-form-urlencoded"}
+common_headers = {"Content-Type": constants.FORM_URL_ENCODED}
 
 
 def auth_device(

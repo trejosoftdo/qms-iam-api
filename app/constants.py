@@ -13,6 +13,8 @@ TIMEOUT = 10
 DEVICE_TOKEN_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:device_code"
 REFRESH_TOKEN_GRANT_TYPE = "refresh_token"
 
+FORM_URL_ENCODED = "application/x-www-form-urlencoded"
+
 # API Metadata
 API_TITLE = "QMS IAM API"
 API_SUMMARY = "QMS Identity and Access Management API"
