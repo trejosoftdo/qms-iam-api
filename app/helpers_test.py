@@ -3,6 +3,7 @@
 
 import unittest
 from unittest.mock import Mock, patch
+from fastapi import HTTPException
 from app.helpers import validate_api_access
 from app.exceptions import UNAUTHORIZED_ERROR, FORBIDDEN_ERROR
 
@@ -29,7 +30,7 @@ class HelpersTest(unittest.TestCase):
         try:
             request_mock = Mock(client=Mock(host=ALLOWED_IP_ADDRESS))
             validate_api_access(request_mock, ALLOWED_KEY)
-        except Exception as exc:
+        except HTTPException as exc:
             assert False, f"Raised an exception {exc}"
 
     @patch(

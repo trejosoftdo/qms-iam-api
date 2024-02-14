@@ -12,8 +12,6 @@ from . import constants as auth_consts
 common_headers = {"Content-Type": constants.FORM_URL_ENCODED}
 
 
-
-
 def auth_device(
     realm: str, payload: models.AuthorizeDevicePayload
 ) -> requests.Response:
