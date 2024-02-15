@@ -1,16 +1,16 @@
 """Auth API handlers
 """
 
-from fastapi import HTTPException
 from . import models
 from . import api
+from .helpers import handle_error_response
 from .. import constants
 from .. import exceptions
 
 
 def authorize_device(
     realm: str, payload: models.AuthorizeDevicePayload
-) -> models.AuthorizeDeviceResponseData:
+) -> models.AuthorizeDeviceResponse:
     """Authorizes a device to a realm in context via the auth API
 
     Args:
@@ -18,11 +18,15 @@ def authorize_device(
       payload (models.AuthorizeDevicePayload): the required payload
 
     Returns:
-        models.AuthorizeDeviceResponseData: Authorization information such as deviceCode,
+        models.AuthorizeDeviceResponse: Authorization information such as deviceCode,
         and userCode.
     """
     response = api.auth_device(realm, payload)
+
+    handle_error_response(response)
+
     data = response.json()
+
     return models.AuthorizeDeviceResponse(
         data=models.AuthorizeDeviceResponseData(
             deviceCode=data.get("device_code"),
@@ -43,33 +47,14 @@ def get_auth_tokens(
         realm (str): The realm in context
         payload (models.GetTokensPayload): The required payload
 
-    Raises:
-        HTTPException: When validation errors are encountered.
-        HTTPException: When unexpected errors are encountered
-
     Returns:
         models.GetTokensResponse: The authorization tokens information
     """
     response = api.get_auth_tokens(realm, payload)
+
+    handle_error_response(response)
+
     data = response.json()
-
-    if response.status_code == 400:
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "message": data.get("error_description"),
-                "code": data.get("error"),
-            },
-        )
-
-    if response.status_code > 400:
-        raise HTTPException(
-            status_code=500,
-            detail={
-                "message": "Unexpected error",
-                "code": "INTERNAL_ERROR",
-            },
-        )
 
     return models.GetTokensResponse(
         data=models.GetTokensResponseData(
@@ -90,33 +75,14 @@ def get_new_access_token(
         realm (str): The realm in context
         payload (models.GetNewAccessTokenPayload): The required payload to refresh token
 
-    Raises:
-        HTTPException: When validation errors are encountered.
-        HTTPException: When unexpected errors are encountered
-
     Returns:
         models.GetNewAccessTokenResponse: The new access token data
     """
     response = api.get_new_access_token(realm, payload)
+
+    handle_error_response(response)
+
     data = response.json()
-
-    if response.status_code == 400:
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "message": data.get("error_description"),
-                "code": data.get("error"),
-            },
-        )
-
-    if response.status_code > 400:
-        raise HTTPException(
-            status_code=500,
-            detail={
-                "message": "Unexpected error",
-                "code": "INTERNAL_ERROR",
-            },
-        )
 
     return models.GetNewAccessTokenResponse(
         data=models.GetNewAccessTokenResponseData(

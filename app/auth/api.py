@@ -6,9 +6,10 @@ import requests
 from .. import environment
 from .. import constants
 from . import models
+from . import constants as auth_consts
 
 
-common_headers = {"Content-Type": "application/x-www-form-urlencoded"}
+common_headers = {"Content-Type": constants.FORM_URL_ENCODED}
 
 
 def auth_device(
@@ -23,7 +24,7 @@ def auth_device(
     Returns:
         requests.Response: The response from the auth API.
     """
-    url = f"{environment.auth_api_base_url}/realms/{realm}/protocol/openid-connect/auth/device"
+    url = f"{environment.auth_api_base_url}/realms/{realm}{auth_consts.AUTH_DEVICE_PATH}"
     payload = urlencode(
         {
             "client_id": payload.clientId,
@@ -47,7 +48,7 @@ def get_auth_tokens(realm: str, payload: models.GetTokensPayload) -> requests.Re
         requests.Response: The response from the auth API.
     """
     url = (
-        f"{environment.auth_api_base_url}/realms/{realm}/protocol/openid-connect/token"
+        f"{environment.auth_api_base_url}/realms/{realm}{auth_consts.AUTH_TOKENS_PATH}"
     )
     payload = urlencode(
         {
@@ -75,7 +76,7 @@ def token_instrospect(
     Returns:
         requests.Response: The response from the auth API.
     """
-    url = f"{environment.auth_api_base_url}/realms/{realm}/protocol/openid-connect/token/introspect"
+    url = f"{environment.auth_api_base_url}/realms/{realm}{auth_consts.INSTROSPECT_PATH}"
     payload = urlencode(
         {
             "token": access_token,
@@ -101,7 +102,7 @@ def get_new_access_token(
         requests.Response: The response from the auth API.
     """
     url = (
-        f"{environment.auth_api_base_url}/realms/{realm}/protocol/openid-connect/token"
+        f"{environment.auth_api_base_url}/realms/{realm}{auth_consts.AUTH_TOKENS_PATH}"
     )
     payload = urlencode(
         {
