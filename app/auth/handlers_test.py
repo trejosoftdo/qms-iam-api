@@ -117,7 +117,7 @@ class HandlersTest(unittest.TestCase):
 
     @patch("app.auth.api.token_instrospect")
     def test_validate_access_token(self, token_instrospect_mock):
-        """validate_access_token: It returns valid and authorized when the token is active and have expected scope"""
+        """validate_access_token: It is valid and authorized when token is active & has scope"""
         json_data = {
             "scope": "first-scope test-scope third-scope",
             "active": True,

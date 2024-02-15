@@ -1,3 +1,6 @@
+"""Auth API helpers
+"""
+
 from fastapi import status
 from requests import Response
 from .. import exceptions
