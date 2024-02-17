@@ -1,3 +1,5 @@
+"""Integration tests environment setup"""
+
 from behave import fixture, use_fixture
 from fastapi.testclient import TestClient
 from app.main import app
@@ -8,6 +10,7 @@ from app.environment import (
     test_auth_application,
 )
 
+# pylint: disable=W0613
 
 @fixture
 def setup_api_client(context, *args, **kwargs):
