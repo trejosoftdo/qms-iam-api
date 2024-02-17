@@ -1,10 +1,11 @@
 """API general steps"""
 
+# pylint: disable=E0611
+
 import re
 from fastapi import status
 from behave import given, when, then
 
-# pylint: disable=E0611
 
 def find(data, path):
     """_summary_
