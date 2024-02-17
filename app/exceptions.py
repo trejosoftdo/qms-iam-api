@@ -12,7 +12,7 @@ INTERNAL_SERVER_ERROR = HTTPException(
         message=constants.INTERNAL_SERVER_ERROR_MESSAGE,
         code=constants.INTERNAL_SERVER_ERROR_CODE,
         type=constants.INTERNAL_ERROR_TYPE,
-    ),
+    ).dict(),
 )
 
 INVALID_TOKEN_ERROR = HTTPException(
@@ -21,7 +21,7 @@ INVALID_TOKEN_ERROR = HTTPException(
         message=constants.INVALID_TOKEN_ERROR_MESSAGE,
         code=constants.INVALID_TOKEN_ERROR_CODE,
         type=constants.AUTHORIZATION_ERROR_TYPE,
-    ),
+    ).dict(),
 )
 
 FORBIDDEN_ERROR = HTTPException(
@@ -30,7 +30,7 @@ FORBIDDEN_ERROR = HTTPException(
         message=constants.FORBIDDEN_ERROR_MESSAGE,
         code=constants.FORBIDDEN_ERROR_CODE,
         type=constants.AUTHORIZATION_ERROR_TYPE,
-    ),
+    ).dict(),
 )
 
 UNAUTHORIZED_ERROR = HTTPException(
@@ -39,7 +39,7 @@ UNAUTHORIZED_ERROR = HTTPException(
         message=constants.UNAUTHORIZED_ERROR_MESSAGE,
         code=constants.UNAUTHORIZED_ERROR_CODE,
         type=constants.AUTHORIZATION_ERROR_TYPE,
-    ),
+    ).dict(),
 )
 
 
@@ -58,5 +58,5 @@ def get_validation_error(data: dict) -> HTTPException:
             message=data.get("error_description"),
             code=data.get("error"),
             type=constants.VALIDATION_ERROR_TYPE,
-        ),
+        ).dict(),
     )

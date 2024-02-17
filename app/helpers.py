@@ -21,6 +21,10 @@ def validate_api_access(
       HTTPException: Authorization error when providing an invalid api key
       HTTPException: Forbidden error when the ip addres is not an allowed one
     """
+    print(request.client.host)
+    print(api_key)
+    print(environment.allowed_api_keys)
+    print(environment.allowed_ip_adresses)
     allowed_keys = environment.allowed_api_keys.split(constants.API_KEYS_SEPARATOR)
     allowed_adresses = environment.allowed_ip_adresses.split(
         constants.IP_ADDRESSES_SEPARATOR
