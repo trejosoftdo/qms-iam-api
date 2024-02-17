@@ -2,7 +2,7 @@
 """
 
 import unittest
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 from fastapi import status
 from fastapi.testclient import TestClient
 from .. import main, constants
