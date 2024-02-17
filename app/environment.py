@@ -3,7 +3,7 @@
 
 import os
 from dotenv import load_dotenv
-from . import constants
+from app import constants
 
 load_dotenv()
 
@@ -12,3 +12,8 @@ allowed_ip_adresses = os.getenv(constants.AUTH_ALLOWED_IP_ADDRESSES_ENV_NAME)
 allowed_api_keys = os.getenv(
     constants.AUTH_ALLOWED_API_KEYS_ENV_NAME, constants.EMPTY_VALUE
 )
+
+test_auth_api_key = os.getenv(constants.TEST_AUTH_API_KEY_ENV_NAME)
+test_auth_api_client_id = os.getenv(constants.TEST_AUTH_API_CLIENT_ID_ENV_NAME)
+test_auth_api_client_secret = os.getenv(constants.TEST_AUTH_API_CLIENT_SECRET_ENV_NAME)
+test_auth_application = os.getenv(constants.TEST_AUTH_APPLICATION_ENV_NAME)

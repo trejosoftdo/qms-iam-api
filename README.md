@@ -79,7 +79,7 @@ In order to run this project, you need to set up the following environment varia
 ## Running the Application
 Run the FastAPI application using Uvicorn:
 ```bash
-uvicorn main:app --reload
+make start
 ```
 
 The API will be accessible at http://localhost:5001.
@@ -91,13 +91,18 @@ Swagger UI: http://127.0.0.1:5001/docs
 Run the linting on the code using:
 
 ```bash
-pylint ./app  --extension-pkg-whitelist='pydantic'
+make lint
 ```
 
 ## Testing
 Run the unit tests using:
 
 ```bash
-cd app
-nosetests
+make unit-tests
+```
+
+Run the integration tests using:
+
+```bash
+make integration-tests
 ```
