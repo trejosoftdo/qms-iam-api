@@ -4,7 +4,6 @@
 import unittest
 from fastapi import HTTPException, status
 from app.exceptions import get_validation_error
-from . import models
 from . import constants
 
 
@@ -20,10 +19,9 @@ class ExceptionsHelpersTests(unittest.TestCase):
         result = get_validation_error(data)
         self.assertIsInstance(result, HTTPException)
         self.assertEqual(result.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIsInstance(result.detail, models.APIResponse)
-        self.assertEqual(result.detail.message, data["error_description"])
-        self.assertEqual(result.detail.code, data["error"])
-        self.assertEqual(result.detail.type, constants.VALIDATION_ERROR_TYPE)
+        self.assertEqual(result.detail["message"], data["error_description"])
+        self.assertEqual(result.detail["code"], data["error"])
+        self.assertEqual(result.detail["type"], constants.VALIDATION_ERROR_TYPE)
 
 
 if __name__ == "__main__":
