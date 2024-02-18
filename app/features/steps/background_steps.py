@@ -104,3 +104,5 @@ def step_obtain_access_tokens(context):
         **context.payloads[token_refresh_path]["VALID"],
         "refreshToken": data["data"]["refreshToken"],
     }
+    access_token = data["data"]["accessToken"]
+    context.headers = {"authorization": f"Bearer {access_token}"}

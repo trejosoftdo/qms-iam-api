@@ -95,6 +95,24 @@ def setup_payloads(context, *args, **kwargs):
                 "refreshToken": "test-refresh-token",
             },
         },
+        "/api/v1/auth/token/validate": {
+            "VALID": {
+                "clientId": test_auth_api_client_id,
+                "clientSecret": test_auth_api_client_secret,
+                "expectedScope": "read_categories",
+            },
+            "INVALID_SCOPE": {
+                "clientId": test_auth_api_client_id,
+                "clientSecret": test_auth_api_client_secret,
+                "expectedScope": "execute_categories",
+            },
+            "INVALID": {},
+            "BAD_CREDENTIALS": {
+                "clientId": "bad-client-id",
+                "clientSecret": "bad-client-secret",
+                "expectedScope": "read_categories",
+            },
+        },
     }
 
 
