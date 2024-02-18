@@ -43,8 +43,7 @@ def step_set_payload_name(context, payload_name):
         context (Any): Test context
         payload_name (string): payload name
     """
-    context.payload_name = payload_name
-
+    context.payload = context.payloads[context.path][payload_name]
 
 @given('"{name}" header is "{value}"')
 def step_set_header_value(context, name, value):
@@ -74,11 +73,10 @@ def step_send_request(context, method):
         setattr(context, "headers", {})
 
     func = getattr(context.client, method.lower())
-    payload = context.payloads[context.path][context.payload_name]
 
     context.response = func(
         context.path,
-        json=payload,
+        json=context.payload,
         headers={**context.common_headers, **context.headers},
     )
 
