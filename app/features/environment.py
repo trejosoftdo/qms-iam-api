@@ -83,6 +83,18 @@ def setup_payloads(context, *args, **kwargs):
                 "deviceCode": "test-code",
             },
         },
+        "/api/v1/auth/token/refresh": {
+            "VALID": {
+                "clientId": test_auth_api_client_id,
+                "clientSecret": test_auth_api_client_secret,
+            },
+            "INVALID": {},
+            "BAD_CREDENTIALS": {
+                "clientId": "bad-client-id",
+                "clientSecret": "bad-client-secret",
+                "refreshToken": "test-refresh-token",
+            },
+        },
     }
 
 
