@@ -1,5 +1,7 @@
 """Background steps"""
 
+# pylint: disable=E0611
+
 import time
 from fastapi import status
 from selenium.webdriver.common.by import By
