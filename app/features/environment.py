@@ -17,6 +17,7 @@ from app.environment import (
 )
 
 # pylint: disable=W0613
+# pylint: disable=C0301
 
 
 @fixture
@@ -45,6 +46,7 @@ def setup_headers(context, *args, **kwargs):
         "api_key": test_auth_api_key,
     }
 
+
 @fixture
 def setup_user_credentials(context, *args, **kwargs):
     """Sets up user credentials"""
@@ -57,6 +59,7 @@ def setup_user_credentials(context, *args, **kwargs):
 @fixture
 def setup_payloads(context, *args, **kwargs):
     """Sets up Test Payloads"""
+    context.invalid_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUZXN0IEpXVCBCdWlsZGVyIiwiaWF0IjoxNzA4MzQ1NTUwLCJleHAiOjE3Mzk4ODE1NTAsImF1ZCI6Ind3dy5leGFtcGxlLmNvbSIsInN1YiI6Impkb2VAZXhhbXBsZS5jb20iLCJHaXZlbk5hbWUiOiJKb2huIiwiU3VybmFtZSI6IkRvZSIsIkVtYWlsIjoiamRvZUBleGFtcGxlLmNvbSIsIlJvbGUiOlsiVGVzdGVyIiwiUHJvamVjdCB0ZXN0ZXIiXX0.YeFRs0nkqBthQ-xhXSnP032CInfL3vRuRPSqWm9Ii2Q"
     context.payloads = {
         "/api/v1/auth/device": {
             "VALID": {

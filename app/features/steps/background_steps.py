@@ -106,3 +106,13 @@ def step_obtain_access_tokens(context):
     }
     access_token = data["data"]["accessToken"]
     context.headers = {"authorization": f"Bearer {access_token}"}
+
+
+@given("access token is invalid")
+def step_set_invalid_access_tokens(context):
+    """Sets an invalid access token to authorization
+
+    Args:
+        context (Any): Test context
+    """
+    context.headers = {"authorization": f"Bearer {context.invalid_token}"}
