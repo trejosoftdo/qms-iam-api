@@ -4,19 +4,20 @@ Feature: Access tokens endpoint
 
     Background:
       Given a device and user code have been obtained
+      And a request url "/api/v1/auth/tokens"
+
 
     Scenario: Get access tokens pending
-        Given a request url "/api/v1/auth/tokens"
-        And "VALID" request json payload
+        Given "VALID" request json payload
         When the request sends "POST"
         Then the response status is "HTTP_400_BAD_REQUEST"
         And the response property "code" is equal to "authorization_pending"
         And the response property "type" is equal to "VALIDATION_ERROR"
         And the response property "message" is equal to "The authorization request is still pending"
 
+
     Scenario: Get access tokens success
         Given the device has been authorized
-        And a request url "/api/v1/auth/tokens"
         And "VALID" request json payload
         When the request sends "POST"
         Then the response status is "HTTP_200_OK"
@@ -25,9 +26,9 @@ Feature: Access tokens endpoint
         And the response property "data.accessToken" matches regular expression "^[a-zA-Z0-9_=]+\.[a-zA-Z0-9_=]+\.[a-zA-Z0-9_\-\+\/=]*"
         And the response property "data.refreshToken" matches regular expression "^[a-zA-Z0-9_=]+\.[a-zA-Z0-9_=]+\.[a-zA-Z0-9_\-\+\/=]*"
 
+
     Scenario: Get access tokens validation errors
-        Given a request url "/api/v1/auth/tokens"
-        And "INVALID" request json payload
+        Given "INVALID" request json payload
         When the request sends "POST"
         Then the response status is "HTTP_400_BAD_REQUEST"
         And the response property "code" is equal to "BAD_REQUEST"
@@ -36,8 +37,7 @@ Feature: Access tokens endpoint
 
 
     Scenario: Get access tokens with bad credentials
-        Given a request url "/api/v1/auth/tokens"
-        And "BAD_CREDENTIALS" request json payload
+        Given "BAD_CREDENTIALS" request json payload
         When the request sends "POST"
         Then the response status is "HTTP_500_INTERNAL_SERVER_ERROR"
         And the response property "code" is equal to "INTERNAL_SERVER_ERROR"
@@ -46,8 +46,7 @@ Feature: Access tokens endpoint
 
 
     Scenario: Get access tokens  with invalid key
-        Given a request url "/api/v1/auth/tokens"
-        And "VALID" request json payload
+        Given "VALID" request json payload
         And "api_key" header is "invalid-api-key"
         When the request sends "POST"
         Then the response status is "HTTP_401_UNAUTHORIZED"

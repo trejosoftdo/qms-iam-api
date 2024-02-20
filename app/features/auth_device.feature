@@ -2,9 +2,11 @@
 Feature: Authorize device endpoint
     As a consumer, I want an endpoint able to authorize devices
 
-    Scenario: Authorize a device success
+    Background:
         Given a request url "/api/v1/auth/device"
-        And "VALID" request json payload
+
+    Scenario: Authorize a device success
+        Given "VALID" request json payload
         When the request sends "POST"
         Then the response status is "HTTP_200_OK"
         And the response property "data.expiresIn" is equal to "600"
@@ -15,8 +17,7 @@ Feature: Authorize device endpoint
 
 
     Scenario: Authorize a device validation errors
-        Given a request url "/api/v1/auth/device"
-        And "INVALID" request json payload
+        Given "INVALID" request json payload
         When the request sends "POST"
         Then the response status is "HTTP_400_BAD_REQUEST"
         And the response property "code" is equal to "BAD_REQUEST"
@@ -25,8 +26,7 @@ Feature: Authorize device endpoint
 
 
     Scenario: Authorize a device with bad credentials
-        Given a request url "/api/v1/auth/device"
-        And "BAD_CREDENTIALS" request json payload
+        Given "BAD_CREDENTIALS" request json payload
         When the request sends "POST"
         Then the response status is "HTTP_500_INTERNAL_SERVER_ERROR"
         And the response property "code" is equal to "INTERNAL_SERVER_ERROR"
@@ -35,8 +35,7 @@ Feature: Authorize device endpoint
 
 
     Scenario: Authorize a device with invalid key
-        Given a request url "/api/v1/auth/device"
-        And "VALID" request json payload
+        Given "VALID" request json payload
         And "api_key" header is "invalid-api-key"
         When the request sends "POST"
         Then the response status is "HTTP_401_UNAUTHORIZED"
