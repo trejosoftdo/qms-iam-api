@@ -6,6 +6,7 @@ from . import handlers
 from . import models
 from . import constants
 from .. import helpers
+from .. import responses
 
 
 router = APIRouter()
@@ -17,6 +18,7 @@ router = APIRouter()
     tags=constants.TAGS,
     operation_id=constants.AUTHORIZE_DEVICE_OPERATION_ID,
     response_model=models.AuthorizeDeviceResponse,
+    responses=responses.responses_descriptions,
 )
 def authorize_device(
     payload: models.AuthorizeDevicePayload,
@@ -41,6 +43,7 @@ def authorize_device(
     tags=constants.TAGS,
     operation_id=constants.GET_AUTH_TOKENS_OPERATION_ID,
     response_model=models.GetTokensResponse,
+    responses=responses.responses_descriptions,
 )
 async def get_auth_tokens(
     payload: models.GetTokensPayload,
@@ -64,6 +67,7 @@ async def get_auth_tokens(
     tags=constants.TAGS,
     operation_id=constants.GET_NEW_ACCESS_TOKEN_OPERATION_ID,
     response_model=models.GetNewAccessTokenResponse,
+    responses=responses.responses_descriptions,
 )
 async def get_new_access_token(
     payload: models.GetNewAccessTokenPayload,
@@ -87,6 +91,7 @@ async def get_new_access_token(
     tags=constants.TAGS,
     operation_id=constants.VALIDATE_ACCESS_TOKEN_OPERATION_ID,
     response_model=models.ValidateAccessTokenResponse,
+    responses=responses.responses_descriptions,
 )
 async def validate_access_token(
     payload: models.ValidateAccessTokenPayload,
