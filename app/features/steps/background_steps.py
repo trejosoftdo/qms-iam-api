@@ -6,6 +6,7 @@ import time
 from fastapi import status
 from selenium.webdriver.common.by import By
 from behave import given
+from app.features import constants
 
 
 def should_login(driver):
@@ -17,7 +18,7 @@ def should_login(driver):
     Returns:
         bool: Returns true if should login
     """
-    return driver.find_elements(By.CSS_SELECTOR, "#kc-form-login")
+    return driver.find_elements(By.CSS_SELECTOR, constants.LOGIN_FORM_SELECTOR)
 
 
 def login_to_portal(driver, verification_uri, credentials):
@@ -31,9 +32,13 @@ def login_to_portal(driver, verification_uri, credentials):
     driver.get(verification_uri)
 
     if should_login(driver):
-        driver.find_element(By.ID, "username").send_keys(credentials["username"])
-        driver.find_element(By.ID, "password").send_keys(credentials["password"])
-        driver.find_element(By.ID, "kc-login").click()
+        driver.find_element(By.ID, constants.USERNAME_ID).send_keys(
+            credentials["username"]
+        )
+        driver.find_element(By.ID, constants.PASSWORD_ID).send_keys(
+            credentials["password"]
+        )
+        driver.find_element(By.ID, constants.LOGIN_ID).click()
 
 
 def approve(driver):
@@ -43,7 +48,7 @@ def approve(driver):
         driver (WebDriver): web driver
     """
     time.sleep(2)
-    driver.find_element(By.ID, "kc-login").click()
+    driver.find_element(By.ID, constants.APPROVE_ID).click()
     time.sleep(2)
 
 
@@ -54,19 +59,16 @@ def step_obtain_device_and_user_code(context):
     Args:
         context (Any): Test context
     """
-    auth_device_path = "/api/v1/auth/device"
-    payload = context.payloads[auth_device_path]["VALID"]
     response = context.client.post(
-        auth_device_path,
-        json=payload,
+        constants.AUTH_DEVICE_PATH,
+        json=context.payloads[constants.AUTH_DEVICE_PATH]["VALID"],
         headers=context.common_headers,
     )
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
     context.data = data["data"]
-    tokens_path = "/api/v1/auth/tokens"
-    context.payloads[tokens_path]["VALID"] = {
-        **context.payloads[tokens_path]["VALID"],
+    context.payloads[constants.AUTH_TOKENS_PATH]["VALID"] = {
+        **context.payloads[constants.AUTH_TOKENS_PATH]["VALID"],
         "deviceCode": data["data"]["deviceCode"],
     }
 
@@ -91,19 +93,16 @@ def step_obtain_access_tokens(context):
     Args:
         context (Any): Test context
     """
-    tokens_path = "/api/v1/auth/tokens"
-    payload = context.payloads[tokens_path]["VALID"]
     response = context.client.post(
-        tokens_path,
-        json=payload,
+        constants.AUTH_TOKENS_PATH,
+        json=context.payloads[constants.AUTH_TOKENS_PATH]["VALID"],
         headers=context.common_headers,
     )
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
     context.data = data["data"]
-    token_refresh_path = "/api/v1/auth/token/refresh"
-    context.payloads[token_refresh_path]["VALID"] = {
-        **context.payloads[token_refresh_path]["VALID"],
+    context.payloads[constants.AUTH_REFRESH_TOKEN_PATH]["VALID"] = {
+        **context.payloads[constants.AUTH_REFRESH_TOKEN_PATH]["VALID"],
         "refreshToken": data["data"]["refreshToken"],
     }
     access_token = data["data"]["accessToken"]

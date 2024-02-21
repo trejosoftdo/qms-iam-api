@@ -54,7 +54,7 @@ def request_validation_error_handler(request: Request, exc: RequestValidationErr
         content=exceptions.get_validation_error(
             {
                 "error_description": ". ".join(errors),
-                "error": "BAD_REQUEST",
+                "error": constants.BAD_REQUEST_ERROR_CODE,
             }
         ).detail,
     )

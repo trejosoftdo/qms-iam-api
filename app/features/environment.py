@@ -15,18 +15,18 @@ from app.environment import (
     test_auth_username,
     test_auth_password,
 )
+from app.features import constants
 
 # pylint: disable=W0613
-# pylint: disable=C0301
 
 
 @fixture
 def setup_web_driver(context, *args, **kwargs):
     """Sets up the web driver"""
     options = Options()
-    options.add_argument("--headless")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument(constants.DRIVER_HEADLESS_MODE_OPTION)
+    options.add_argument(constants.DRIVER_NO_SANDBOX_OPTION)
+    options.add_argument(constants.DRIVER_DISABLE_DEV_SHM_OPTION)
     context.driver = webdriver.Chrome(
         service=Service(ChromeDriverManager().install()), options=options
     )
@@ -59,61 +59,58 @@ def setup_user_credentials(context, *args, **kwargs):
 @fixture
 def setup_payloads(context, *args, **kwargs):
     """Sets up Test Payloads"""
-    context.invalid_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUZXN0IEpXVCBCdWlsZGVyIiwiaWF0IjoxNzA4MzQ1NTUwLCJleHAiOjE3Mzk4ODE1NTAsImF1ZCI6Ind3dy5leGFtcGxlLmNvbSIsInN1YiI6Impkb2VAZXhhbXBsZS5jb20iLCJHaXZlbk5hbWUiOiJKb2huIiwiU3VybmFtZSI6IkRvZSIsIkVtYWlsIjoiamRvZUBleGFtcGxlLmNvbSIsIlJvbGUiOlsiVGVzdGVyIiwiUHJvamVjdCB0ZXN0ZXIiXX0.YeFRs0nkqBthQ-xhXSnP032CInfL3vRuRPSqWm9Ii2Q"
+    api_valid_credentials = {
+        "clientId": test_auth_api_client_id,
+        "clientSecret": test_auth_api_client_secret,
+    }
+    api_invalid_credentials = {
+        "clientId": constants.TEST_BAD_CLIENT_ID,
+        "clientSecret": constants.TEST_BAD_CLIENT_SECRET,
+    }
+    context.invalid_token = constants.INVALID_TOKEN
     context.payloads = {
-        "/api/v1/auth/device": {
+        constants.AUTH_DEVICE_PATH: {
             "VALID": {
-                "clientId": test_auth_api_client_id,
-                "clientSecret": test_auth_api_client_secret,
-                "scope": "read_categories",
+                **api_valid_credentials,
+                "scope": constants.TEST_VALID_SCOPE,
             },
             "INVALID": {},
             "BAD_CREDENTIALS": {
-                "clientId": "bad-client-id",
-                "clientSecret": "bad-client-secret",
-                "scope": "read_categories",
+                **api_invalid_credentials,
+                "scope": constants.TEST_VALID_SCOPE,
             },
         },
-        "/api/v1/auth/tokens": {
+        constants.AUTH_TOKENS_PATH: {
+            "VALID": {**api_valid_credentials},
+            "INVALID": {},
+            "BAD_CREDENTIALS": {
+                **api_invalid_credentials,
+                "deviceCode": constants.TEST_INVALID_DEVICE_CODE,
+            },
+        },
+        constants.AUTH_REFRESH_TOKEN_PATH: {
             "VALID": {
-                "clientId": test_auth_api_client_id,
-                "clientSecret": test_auth_api_client_secret,
+                **api_valid_credentials,
             },
             "INVALID": {},
             "BAD_CREDENTIALS": {
-                "clientId": "bad-client-id",
-                "clientSecret": "bad-client-secret",
-                "deviceCode": "test-code",
+                **api_invalid_credentials,
+                "refreshToken": constants.TEST_REFRESH_TOKEN,
             },
         },
-        "/api/v1/auth/token/refresh": {
+        constants.AUTH_VALIDATE_TOKEN_PATH: {
             "VALID": {
-                "clientId": test_auth_api_client_id,
-                "clientSecret": test_auth_api_client_secret,
-            },
-            "INVALID": {},
-            "BAD_CREDENTIALS": {
-                "clientId": "bad-client-id",
-                "clientSecret": "bad-client-secret",
-                "refreshToken": "test-refresh-token",
-            },
-        },
-        "/api/v1/auth/token/validate": {
-            "VALID": {
-                "clientId": test_auth_api_client_id,
-                "clientSecret": test_auth_api_client_secret,
-                "expectedScope": "read_categories",
+                **api_valid_credentials,
+                "expectedScope": constants.TEST_VALID_SCOPE,
             },
             "INVALID_SCOPE": {
-                "clientId": test_auth_api_client_id,
-                "clientSecret": test_auth_api_client_secret,
-                "expectedScope": "execute_categories",
+                **api_valid_credentials,
+                "expectedScope": constants.TEST_INVALID_SCOPE,
             },
             "INVALID": {},
             "BAD_CREDENTIALS": {
-                "clientId": "bad-client-id",
-                "clientSecret": "bad-client-secret",
-                "expectedScope": "read_categories",
+                **api_invalid_credentials,
+                "expectedScope": constants.TEST_VALID_SCOPE,
             },
         },
     }
