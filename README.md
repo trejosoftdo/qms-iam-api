@@ -47,6 +47,11 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+5. Run the setup file:
+```
+./setup.sh
+```
+
 
 ## Environment Variables
 
@@ -74,6 +79,54 @@ In order to run this project, you need to set up the following environment varia
 - **Example:** 
   ```plaintext
   AUTH_ALLOWED_IP_ADDRESSES=127.0.0.1,10.0.12.13
+  ```
+
+### `TEST_AUTH_API_KEY`
+
+- **Description:** Auth API key for testing
+- **Example:** 
+  ```plaintext
+  TEST_AUTH_API_KEY=test-api-key
+  ```
+
+### `TEST_AUTH_API_CLIENT_ID`
+
+- **Description:** Auth API client id for testing
+- **Example:** 
+  ```plaintext
+  TEST_AUTH_API_CLIENT_ID=test-auth-api-client-id
+  ```
+
+### `TEST_AUTH_API_CLIENT_SECRET`
+
+- **Description:** Auth API client secret for testing
+- **Example:** 
+  ```plaintext
+  TEST_AUTH_API_CLIENT_SECRET=test-auth-api-client-secret
+  ```
+
+### `TEST_AUTH_APPLICATION`
+
+- **Description:** Auth API application for testing
+- **Example:** 
+  ```plaintext
+  TEST_AUTH_APPLICATION=test-auth-application
+  ```
+
+### `TEST_AUTH_USERNAME`
+
+- **Description:** Auth API user name for testing
+- **Example:** 
+  ```plaintext
+  TEST_AUTH_USERNAME=test-auth-username
+  ```
+
+### `TEST_AUTH_PASSWORD`
+
+- **Description:** Auth API user password for testing
+- **Example:** 
+  ```plaintext
+  TEST_AUTH_PASSWORD=test-auth-password
   ```
 
 ## Running the Application

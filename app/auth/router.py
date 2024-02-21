@@ -13,7 +13,7 @@ router = APIRouter()
 
 
 @router.post(
-    "/device",
+    constants.DEVICE_ROUTE_PATH,
     dependencies=[Depends(helpers.validate_api_access)],
     tags=constants.TAGS,
     operation_id=constants.AUTHORIZE_DEVICE_OPERATION_ID,
@@ -38,7 +38,7 @@ def authorize_device(
 
 
 @router.post(
-    "/tokens",
+    constants.TOKENS_ROUTE_PATH,
     dependencies=[Depends(helpers.validate_api_access)],
     tags=constants.TAGS,
     operation_id=constants.GET_AUTH_TOKENS_OPERATION_ID,
@@ -62,7 +62,7 @@ async def get_auth_tokens(
 
 
 @router.post(
-    "/token/refresh",
+    constants.TOKEN_REFRESH_ROUTE_PATH,
     dependencies=[Depends(helpers.validate_api_access)],
     tags=constants.TAGS,
     operation_id=constants.GET_NEW_ACCESS_TOKEN_OPERATION_ID,
@@ -86,7 +86,7 @@ async def get_new_access_token(
 
 
 @router.post(
-    "/token/validate",
+    constants.TOKEN_VALIDATE_ROUTE_PATH,
     dependencies=[Depends(helpers.validate_api_access)],
     tags=constants.TAGS,
     operation_id=constants.VALIDATE_ACCESS_TOKEN_OPERATION_ID,
