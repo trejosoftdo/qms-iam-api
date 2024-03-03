@@ -22,22 +22,33 @@ Feature: Register new user endpoint
         And the response property "type" is equal to "VALIDATION_ERROR"
         And the response property "message" is equal to "field required (body.username). field required (body.firstName). field required (body.lastName). field required (body.email). field required (body.password)"
 
-    Scenario: Register new user with access token
+    Scenario: Register new user with invalid access token
         Given access token is invalid
         Given "VALID" request json payload
         When the request sends "POST"
-        Then the response status is "HTTP_500_INTERNAL_SERVER_ERROR"
-        And the response property "code" is equal to "INTERNAL_SERVER_ERROR"
-        And the response property "type" is equal to "INTERNAL_ERROR"
-        And the response property "message" is equal to "Internal Server Error"
+        Then the response status is "HTTP_401_UNAUTHORIZED"
+        And the response property "code" is equal to "UNAUTHORIZED"
+        And the response property "type" is equal to "AUTHORIZATION_ERROR"
+        And the response property "message" is equal to "Unauthorized"
 
 
     Scenario: Register new user  with invalid key
         Given an admin access token has been obtained
-        AND "VALID" request json payload
+        And "VALID" request json payload
         And "api_key" header is "invalid-api-key"
         When the request sends "POST"
         Then the response status is "HTTP_401_UNAUTHORIZED"
         And the response property "code" is equal to "UNAUTHORIZED"
         And the response property "type" is equal to "AUTHORIZATION_ERROR"
         And the response property "message" is equal to "Unauthorized"
+
+
+    Scenario: Register an existing user
+        Given an admin access token has been obtained
+        And an user has been registered
+        And "VALID" request json payload
+        When the request sends "POST"
+        Then the response status is "HTTP_409_CONFLICT"
+        And the response property "code" is equal to "CONFLICT"
+        And the response property "type" is equal to "CONFLICT_ERROR"
+        And the response property "message" is equal to "Conflict"

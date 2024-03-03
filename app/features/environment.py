@@ -18,6 +18,7 @@ from app.environment import (
     test_auth_password,
 )
 from app.features import constants
+from app.features.helpers import get_user_register_payload
 
 # pylint: disable=W0613
 
@@ -127,15 +128,22 @@ def setup_payloads(context, *args, **kwargs):
             },
         },
         constants.AUTH_REGISTER_USER_PATH: {
+            "VALID": get_user_register_payload(),
+            "INVALID": {},
+        },
+        constants.AUTH_LOGIN_USER_PATH: {
             "VALID": {
-                "username": "jdoe",
-                "firstName": "John",
-                "lastName": "Doe",
-                "email": "jdoe@test.com",
-                "password": "testpass",
+                **api_valid_credentials,
+                "scope": constants.TEST_VALID_SCOPE,
+            },
+            "NON_EXISTING": {
+                **api_valid_credentials,
+                "scope": constants.TEST_VALID_SCOPE,
+                "username": "non-existing-user",
+                "password": "testnonexistingpasssword",
             },
             "INVALID": {},
-        }
+        },
     }
 
 

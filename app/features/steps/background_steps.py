@@ -7,6 +7,7 @@ from fastapi import status
 from selenium.webdriver.common.by import By
 from behave import given
 from app.features import constants
+from app.features.helpers import get_user_register_payload
 
 
 def should_login(driver):
@@ -135,3 +136,29 @@ def step_obtain_admin_access_tokens(context):
     data = response.json()
     access_token = data["data"]["accessToken"]
     context.headers = {"authorization": f"Bearer {access_token}"}
+
+
+@given("an user has been registered")
+def step_register_user(context):
+    """Registers a new user
+
+    Args:
+        context (Any): Test context
+    """
+    register_payload = get_user_register_payload()
+    context.payloads[constants.AUTH_REGISTER_USER_PATH]["VALID"] = register_payload
+    response = context.client.post(
+        constants.AUTH_REGISTER_USER_PATH,
+        json=register_payload,
+        headers={
+            **context.common_headers,
+            **context.headers,
+        }
+    )
+    # TODO: Should be 201 created
+    assert response.status_code == status.HTTP_200_OK
+    context.payloads[constants.AUTH_LOGIN_USER_PATH]["VALID"] = {
+        **context.payloads[constants.AUTH_LOGIN_USER_PATH]["VALID"],
+        "username": register_payload["username"],
+        "password": register_payload["password"],
+    }
