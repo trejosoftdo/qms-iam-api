@@ -13,8 +13,11 @@ TEST_BAD_CLIENT_SECRET = "bad-client-secret"
 # Paths
 AUTH_DEVICE_PATH = "/api/v1/auth/device"
 AUTH_TOKENS_PATH = "/api/v1/auth/tokens"
+AUTH_TOKENS_FOR_CREDENCIALS_PATH = "/api/v1/auth/tokens/for-credentials"
 AUTH_REFRESH_TOKEN_PATH = "/api/v1/auth/token/refresh"
 AUTH_VALIDATE_TOKEN_PATH = "/api/v1/auth/token/validate"
+AUTH_REGISTER_USER_PATH = "/api/v1/auth/register"
+AUTH_LOGIN_USER_PATH = "/api/v1/auth/login"
 
 # Driver options
 DRIVER_HEADLESS_MODE_OPTION = "--headless"

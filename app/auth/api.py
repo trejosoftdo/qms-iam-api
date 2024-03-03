@@ -21,6 +21,15 @@ def get_base_path() -> str:
     return f"{environment.auth_api_base_url}{auth_consts.REALMS_PATH}"
 
 
+def get_admin_base_path() -> str:
+    """Gets the API base path
+
+    Returns:
+        str: Base path
+    """
+    return f"{environment.auth_api_base_url}{auth_consts.ADMIN_PATH}{auth_consts.REALMS_PATH}"
+
+
 def auth_device(
     realm: str, payload: models.AuthorizeDevicePayload
 ) -> requests.Response:
@@ -119,4 +128,88 @@ def get_new_access_token(
     )
     return requests.post(
         url, headers=common_headers, data=payload, timeout=constants.TIMEOUT
+    )
+
+
+def get_auth_tokens_for_credentials(
+    realm: str, payload: models.GetTokensForCredentialsPayload
+) -> requests.Response:
+    """Gets the authorization tokens for the credentials and realm in context
+
+    Args:
+        realm (str): The realm in context
+        payload (models.GetTokensForCredentialsPayload): The required payload to get tokens
+
+    Returns:
+        requests.Response: The response from the auth API.
+    """
+    url = f"{get_base_path()}{realm}{auth_consts.AUTH_TOKENS_PATH}"
+    data = urlencode(
+        {
+            "grant_type": constants.CLIENT_CREDENTIALS_GRANT_TYPE,
+            "client_id": payload.clientId,
+            "client_secret": payload.clientSecret,
+        }
+    )
+    return requests.post(
+        url, headers=common_headers, data=data, timeout=constants.TIMEOUT
+    )
+
+
+def register_new_user(
+    realm: str, authorization: str, payload: models.RegisterUserPayload
+) -> requests.Response:
+    """Registers a new user
+
+    Args:
+        realm (str): The realm in context
+        authorization (str): Authorization access token
+        payload (models.RegisterUserPayload): The required payload to register an user
+
+    Returns:
+        requests.Response: The response from the auth API.
+    """
+    url = f"{get_admin_base_path()}{realm}{auth_consts.AUTH_USERS_PATH}"
+    data = {
+        "username": payload.username,
+        "enabled": True,
+        "email": payload.email,
+        "firstName": payload.firstName,
+        "lastName": payload.lastName,
+        "credentials": [{"type": "password", "value": payload.password}],
+    }
+    return requests.post(
+        url,
+        headers={
+            "Content-Type": constants.JSON_CONTENT_TYPE,
+            "Authorization": authorization,
+        },
+        json=data,
+        timeout=constants.TIMEOUT,
+    )
+
+
+def login_user(realm: str, payload: models.LoginUserPayload) -> requests.Response:
+    """Logins an user
+
+    Args:
+        realm (str): The realm in context
+        payload (models.LoginUserPayload): The required payload to login an user
+
+    Returns:
+        requests.Response: The response from the auth API.
+    """
+    url = f"{get_base_path()}{realm}{auth_consts.AUTH_TOKENS_PATH}"
+    data = urlencode(
+        {
+            "grant_type": constants.PASSWORD_GRANT_TYPE,
+            "client_id": payload.clientId,
+            "client_secret": payload.clientSecret,
+            "scope": payload.scope,
+            "username": payload.username,
+            "password": payload.password,
+        }
+    )
+    return requests.post(
+        url, headers=common_headers, data=data, timeout=constants.TIMEOUT
     )

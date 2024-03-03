@@ -117,3 +117,21 @@ def step_set_invalid_access_tokens(context):
         context (Any): Test context
     """
     context.headers = {"authorization": f"Bearer {context.invalid_token}"}
+
+
+@given("an admin access token has been obtained")
+def step_obtain_admin_access_tokens(context):
+    """Obtains an admin access tokens
+
+    Args:
+        context (Any): Test context
+    """
+    response = context.client.post(
+        constants.AUTH_TOKENS_FOR_CREDENCIALS_PATH,
+        json=context.payloads[constants.AUTH_TOKENS_FOR_CREDENCIALS_PATH]["VALID"],
+        headers=context.common_headers,
+    )
+    assert response.status_code == status.HTTP_200_OK
+    data = response.json()
+    access_token = data["data"]["accessToken"]
+    context.headers = {"authorization": f"Bearer {access_token}"}

@@ -109,3 +109,55 @@ async def validate_access_token(
         models.ValidateAccessTokenResponse: The new access token information
     """
     return handlers.validate_access_token(application, authorization, payload)
+
+
+@router.post(
+    constants.TOKENS_FOR_CREDENTIALS_ROUTE_PATH,
+    dependencies=[Depends(helpers.validate_api_access)],
+    tags=constants.TAGS,
+    operation_id=constants.TOKENS_FOR_CREDENTIALS_OPERATION_ID,
+    response_model=models.GetTokensForCredentialsResponse,
+    responses=responses.responses_descriptions,
+)
+def get_auth_tokens_for_credentials(
+    payload: models.GetTokensForCredentialsPayload,
+    application: str = Header(..., convert_underscores=False),
+) -> models.GetTokensForCredentialsResponse:
+    """Gets the authorization tokens for the credentials and realm in context
+    """
+    return handlers.get_auth_tokens_for_credentials(application, payload)
+
+
+@router.post(
+    constants.REGISTER_ROUTE_PATH,
+    dependencies=[Depends(helpers.validate_api_access)],
+    tags=constants.TAGS,
+    operation_id=constants.REGISTER_USER_OPERATION_ID,
+    response_model=models.RegisterUserResponse,
+    responses=responses.responses_descriptions,
+)
+def register_new_user(
+    payload: models.RegisterUserPayload,
+    application: str = Header(..., convert_underscores=False),
+    authorization: str = Header(..., convert_underscores=False),
+) -> models.RegisterUserResponse:
+    """Registers a new user
+    """
+    return handlers.register_new_user(application, authorization, payload)
+
+
+@router.post(
+    constants.LOGIN_ROUTE_PATH,
+    dependencies=[Depends(helpers.validate_api_access)],
+    tags=constants.TAGS,
+    operation_id=constants.LOGIN_USER_OPERATION_ID,
+    response_model=models.LoginUserResponse,
+    responses=responses.responses_descriptions,
+)
+def login_user(
+    payload: models.LoginUserPayload,
+    application: str = Header(..., convert_underscores=False),
+) -> models.LoginUserResponse:
+    """Logs in an user
+    """
+    return handlers.login_user(application, payload)
