@@ -136,6 +136,7 @@ def step_obtain_admin_access_tokens(context):
     data = response.json()
     access_token = data["data"]["accessToken"]
     context.headers = {"authorization": f"Bearer {access_token}"}
+    context.admin_access_token = access_token
 
 
 @given("an user has been registered")
@@ -155,7 +156,6 @@ def step_register_user(context):
             **context.headers,
         }
     )
-    # TODO: Should be 201 created
     assert response.status_code == status.HTTP_200_OK
     context.payloads[constants.AUTH_LOGIN_USER_PATH]["VALID"] = {
         **context.payloads[constants.AUTH_LOGIN_USER_PATH]["VALID"],

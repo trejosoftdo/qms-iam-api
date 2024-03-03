@@ -18,7 +18,7 @@ from app.environment import (
     test_auth_password,
 )
 from app.features import constants
-from app.features.helpers import get_user_register_payload
+from app.features.helpers import get_user_register_payload, delete_test_users
 
 # pylint: disable=W0613
 
@@ -154,3 +154,4 @@ def before_feature(context, feature):
     use_fixture(setup_payloads, context)
     use_fixture(setup_web_driver, context)
     use_fixture(setup_user_credentials, context)
+    delete_test_users(context)
