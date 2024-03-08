@@ -29,6 +29,7 @@ def delete_test_user(user_id, access_token):
     requests.delete(
         f"{auth_api_base_url}/admin/realms/{test_auth_application}/users/{user_id}",
         headers={"authorization": f"Bearer {access_token}"},
+        timeout=10
     )
 
 
@@ -43,12 +44,14 @@ def delete_test_users(context):
         headers={
             **context.common_headers,
         },
+        timeout=10
     )
     data = response.json()
     access_token = data["data"]["accessToken"]
     response = requests.get(
         f"{auth_api_base_url}/admin/realms/{test_auth_application}/users",
         headers={"authorization": f"Bearer {access_token}"},
+        timeout=10
     )
     data = response.json()
 
