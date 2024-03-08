@@ -40,8 +40,41 @@ class AuthHelpersTest(unittest.TestCase):
         get_validation_error_mock.assert_called_with(self.data)
 
     @patch("app.auth.helpers.exceptions.get_validation_error")
+    def test_handle_error_response_unauthorized_error(self, get_validation_error_mock):
+        """handle_error_response: it returns an unauthorized error when status is 401"""
+        response_mock = Mock(
+            spec=Response,
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            json=Mock(return_value=self.data),
+        )
+        self.assertRaises(HTTPException, handle_error_response, response_mock)
+        get_validation_error_mock.assert_not_called()
+
+    @patch("app.auth.helpers.exceptions.get_validation_error")
+    def test_handle_error_response_forbidden_error(self, get_validation_error_mock):
+        """handle_error_response: it returns a forbidden error when status is 403"""
+        response_mock = Mock(
+            spec=Response,
+            status_code=status.HTTP_403_FORBIDDEN,
+            json=Mock(return_value=self.data),
+        )
+        self.assertRaises(HTTPException, handle_error_response, response_mock)
+        get_validation_error_mock.assert_not_called()
+
+    @patch("app.auth.helpers.exceptions.get_validation_error")
+    def test_handle_error_response_conflict_error(self, get_validation_error_mock):
+        """handle_error_response: it returns a conflict error when status is 409"""
+        response_mock = Mock(
+            spec=Response,
+            status_code=status.HTTP_409_CONFLICT,
+            json=Mock(return_value=self.data),
+        )
+        self.assertRaises(HTTPException, handle_error_response, response_mock)
+        get_validation_error_mock.assert_not_called()
+
+    @patch("app.auth.helpers.exceptions.get_validation_error")
     def test_handle_error_response_unexpected_error(self, get_validation_error_mock):
-        """handle_error_response: it returns an internal error when status is greater than 400"""
+        """handle_error_response: it returns an internal error when status is greater than 403"""
         response_mock = Mock(
             spec=Response,
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

@@ -9,6 +9,9 @@ from .handlers import (
     authorize_device,
     get_auth_tokens,
     get_new_access_token,
+    get_auth_tokens_for_credentials,
+    login_user,
+    register_new_user,
     validate_access_token,
 )
 from . import models
@@ -226,6 +229,103 @@ class HandlersTest(unittest.TestCase):
         token_instrospect_mock.assert_called_with(
             self.realm, self.access_token, payload
         )
+
+    @patch("app.auth.handlers.handle_error_response")
+    @patch("app.auth.api.get_auth_tokens_for_credentials")
+    def test_get_auth_tokens_for_credentials(
+        self, get_auth_tokens_for_credentials_mock, handle_error_response_mock
+    ):
+        """get_auth_tokens_for_credentials: It can get access token for given credentials"""
+        json_data = {
+            "access_token": self.access_token,
+            "expires_in": 1800,
+        }
+        get_auth_tokens_for_credentials_mock.return_value = Mock(
+            spec=Response,
+            status_code=status.HTTP_200_OK,
+            json=Mock(return_value=json_data),
+        )
+        payload = models.GetTokensForCredentialsPayload(
+            clientId="test-client-id",
+            clientSecret="test-client-secret",
+        )
+        response = get_auth_tokens_for_credentials(self.realm, payload)
+
+        self.assertEqual(response.data.accessToken, json_data["access_token"])
+        self.assertEqual(response.data.expiresIn, json_data["expires_in"])
+
+        get_auth_tokens_for_credentials_mock.assert_called_with(self.realm, payload)
+        handle_error_response_mock.assert_called_with(
+            get_auth_tokens_for_credentials_mock.return_value
+        )
+
+    @patch("app.auth.handlers.handle_error_response")
+    @patch("app.auth.api.register_new_user")
+    def test_register_new_user(
+        self, register_new_user_mock, handle_error_response_mock
+    ):
+        """register_new_user: It can register an user"""
+        json_data = {
+            "access_token": self.access_token,
+            "expires_in": 1800,
+        }
+        register_new_user_mock.return_value = Mock(
+            spec=Response,
+            status_code=status.HTTP_200_OK,
+            json=Mock(return_value=json_data),
+        )
+        payload = models.RegisterUserPayload(
+            username="test-user-name",
+            email="john@doe.com",
+            firstName="John",
+            lastName="Doe",
+            password="test-pass!",
+        )
+        response = register_new_user(self.realm, self.access_token, payload)
+
+        self.assertEqual(response.registered, True)
+
+        register_new_user_mock.assert_called_with(
+            self.realm, self.access_token, payload
+        )
+        handle_error_response_mock.assert_called_with(
+            register_new_user_mock.return_value
+        )
+
+    @patch("app.auth.handlers.handle_error_response")
+    @patch("app.auth.api.login_user")
+    def test_login_user(self, login_user_mock, handle_error_response_mock):
+        """login_user: It can get login an user"""
+        json_data = {
+            "access_token": self.access_token,
+            "refresh_token": self.access_token,
+            "expires_in": 1800,
+            "refresh_expires_in": 3600,
+        }
+
+        login_user_mock.return_value = Mock(
+            spec=Response,
+            status_code=status.HTTP_200_OK,
+            json=Mock(return_value=json_data),
+        )
+        payload = models.LoginUserPayload(
+            clientId="test-client-id",
+            clientSecret="test-client-secret",
+            scope="test-scope",
+            username="test-username",
+            password="test-password!",
+        )
+        response = login_user(self.realm, payload)
+
+        self.assertEqual(response.data.accessToken, json_data["access_token"])
+        self.assertEqual(response.data.expiresIn, json_data["expires_in"])
+        self.assertEqual(response.data.refreshToken, json_data["refresh_token"])
+        self.assertEqual(
+            response.data.refreshExpiresIn, json_data["refresh_expires_in"]
+        )
+
+        login_user_mock.assert_called_with(self.realm, payload)
+        handle_error_response_mock.assert_called_with(login_user_mock.return_value)
 
 
 if __name__ == "__main__":

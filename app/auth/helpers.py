@@ -20,5 +20,14 @@ def handle_error_response(response: Response) -> None:
         data = response.json()
         raise exceptions.get_validation_error(data)
 
-    if response.status_code > status.HTTP_400_BAD_REQUEST:
+    if response.status_code == status.HTTP_401_UNAUTHORIZED:
+        raise exceptions.UNAUTHORIZED_ERROR
+
+    if response.status_code == status.HTTP_403_FORBIDDEN:
+        raise exceptions.FORBIDDEN_ERROR
+
+    if response.status_code == status.HTTP_409_CONFLICT:
+        raise exceptions.CONFLICT_ERROR
+
+    if response.status_code > status.HTTP_403_FORBIDDEN:
         raise exceptions.INTERNAL_SERVER_ERROR

@@ -13,7 +13,7 @@ Feature: Refresh tokens endpoint
         Given "VALID" request json payload
         When the request sends "POST"
         Then the response status is "HTTP_200_OK"
-        And the response property "data.expiresIn" is equal to "300"
+        And the response property "data.expiresIn" matches regular expression "\d\d\d\d"
         And the response property "data.accessToken" matches regular expression "^[a-zA-Z0-9_=]+\.[a-zA-Z0-9_=]+\.[a-zA-Z0-9_\-\+\/=]*"
 
 

@@ -140,3 +140,96 @@ class ValidateAccessTokenResponse(BaseModel):
     """
 
     data: ValidateAccessTokenResponseData
+
+
+class GetTokensForCredentialsPayload(BaseModel):
+    """Get Tokens for credentials Payload
+
+    Args:
+        BaseModel (class): Base model class
+    """
+
+    clientId: str
+    clientSecret: str
+
+
+class GetTokensForCredentialsResponseData(BaseModel):
+    """Get Tokens for credentials Response data
+
+    Args:
+        BaseModel (class): Base model class
+    """
+
+    accessToken: str
+    expiresIn: int
+
+
+class GetTokensForCredentialsResponse(BaseModel):
+    """Get Tokens for credentials Response
+
+    Args:
+        BaseModel (class): Base model class
+    """
+
+    data: GetTokensForCredentialsResponseData
+
+
+class RegisterUserPayload(BaseModel):
+    """Register User Payload
+
+    Args:
+        BaseModel (class): Base model class
+    """
+
+    username: str
+    firstName: str
+    lastName: str
+    email: str
+    password: str
+
+
+class RegisterUserResponse(BaseModel):
+    """Register User Response
+
+    Args:
+        BaseModel (class): Base model class
+    """
+
+    registered: bool
+
+
+class LoginUserPayload(BaseModel):
+    """Login User Payload
+
+    Args:
+        BaseModel (class): Base model class
+    """
+
+    clientId: str
+    clientSecret: str
+    username: str
+    password: str
+    scope: str
+
+
+class LoginUserResponseData(BaseModel):
+    """Login User Response data
+
+    Args:
+        BaseModel (class): Base model class
+    """
+
+    accessToken: str
+    refreshToken: str
+    expiresIn: int
+    refreshExpiresIn: int
+
+
+class LoginUserResponse(BaseModel):
+    """Login User Response
+
+    Args:
+        BaseModel (class): Base model class
+    """
+
+    data: LoginUserResponseData

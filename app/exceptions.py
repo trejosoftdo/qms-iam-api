@@ -42,6 +42,15 @@ UNAUTHORIZED_ERROR = HTTPException(
     ).dict(),
 )
 
+CONFLICT_ERROR = HTTPException(
+    status_code=status.HTTP_409_CONFLICT,
+    detail=models.APIResponse(
+        message=constants.CONFLICT_ERROR_MESSAGE,
+        code=constants.CONFLICT_ERROR_CODE,
+        type=constants.CONFLICT_ERROR_TYPE,
+    ).dict(),
+)
+
 
 def get_validation_error(data: dict) -> HTTPException:
     """Gets a validation error from given data

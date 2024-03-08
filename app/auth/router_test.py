@@ -7,6 +7,7 @@ from fastapi import status
 from fastapi.testclient import TestClient
 from .. import main, constants
 from . import models
+from . import constants as auth_constants
 
 
 class RouterTest(unittest.TestCase):
@@ -139,6 +140,101 @@ class RouterTest(unittest.TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         validate_access_token_mock.assert_called_with(
             self.application, self.authorization, payload
+        )
+
+    @patch("app.helpers.environment")
+    @patch("app.auth.handlers.get_auth_tokens_for_credentials")
+    def test_get_auth_tokens_for_credentials(
+        self, get_auth_tokens_for_credentials_mock, environment_mock
+    ):
+        """get_auth_tokens_for_credentials: It can get access token for a given credentials"""
+        environment_mock.allowed_api_keys = self.api_key
+        environment_mock.allowed_ip_adresses = self.host
+
+        get_auth_tokens_for_credentials_mock.return_value = (
+            models.GetTokensForCredentialsResponse(
+                data=models.GetTokensForCredentialsResponseData(
+                    accessToken="test-token",
+                    expiresIn=1234,
+                ),
+            )
+        )
+        payload = models.GetTokensForCredentialsPayload(
+            clientId="test-client-id",
+            clientSecret="test-client-secret",
+        )
+        response = self.client.post(
+            f"{constants.AUTH_ROUTE_PREFIX}{auth_constants.TOKENS_FOR_CREDENTIALS_ROUTE_PATH}",
+            headers=self.headers,
+            json=payload.dict(),
+        )
+        self.assertEqual(
+            response.json(), get_auth_tokens_for_credentials_mock.return_value
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        get_auth_tokens_for_credentials_mock.assert_called_with(
+            self.application, payload
+        )
+
+    @patch("app.helpers.environment")
+    @patch("app.auth.handlers.register_new_user")
+    def test_register_new_user(self, register_new_user_mock, environment_mock):
+        """register_new_user: It can register a new user"""
+        environment_mock.allowed_api_keys = self.api_key
+        environment_mock.allowed_ip_adresses = self.host
+
+        register_new_user_mock.return_value = models.RegisterUserResponse(
+            registered=True
+        )
+        payload = models.RegisterUserPayload(
+            username="test-user-name",
+            firstName="John",
+            lastName="Doe",
+            email="john@doe.com",
+            password="test-pass!",
+        )
+        response = self.client.post(
+            f"{constants.AUTH_ROUTE_PREFIX}{auth_constants.REGISTER_ROUTE_PATH}",
+            headers=self.headers,
+            json=payload.dict(),
+        )
+        self.assertEqual(response.json(), register_new_user_mock.return_value)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        register_new_user_mock.assert_called_with(
+            self.application, self.authorization, payload
+        )
+
+    @patch("app.helpers.environment")
+    @patch("app.auth.handlers.login_user")
+    def test_login_user(self, login_user_mock, environment_mock):
+        """login_user: It can register a new user"""
+        environment_mock.allowed_api_keys = self.api_key
+        environment_mock.allowed_ip_adresses = self.host
+
+        login_user_mock.return_value = models.LoginUserResponse(
+            data=models.LoginUserResponseData(
+                accessToken="test-access-token",
+                refreshToken="test-refresh-token",
+                expiresIn=100,
+                refreshExpiresIn=3000,
+            )
+        )
+        payload = models.LoginUserPayload(
+            clientId="test-client-id",
+            clientSecret="test-client-secret",
+            username="test-username",
+            password="test-password!",
+            scope="test-scope",
+        )
+        response = self.client.post(
+            f"{constants.AUTH_ROUTE_PREFIX}{auth_constants.LOGIN_ROUTE_PATH}",
+            headers=self.headers,
+            json=payload.dict(),
+        )
+        self.assertEqual(response.json(), login_user_mock.return_value)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        login_user_mock.assert_called_with(
+            self.application, payload
         )
 
 
