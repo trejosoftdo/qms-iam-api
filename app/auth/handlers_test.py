@@ -11,8 +11,11 @@ from .handlers import (
     get_new_access_token,
     get_auth_tokens_for_credentials,
     login_user,
+    logout,
+    send_reset_password_email,
     register_new_user,
     validate_access_token,
+    get_user_basic_data,
 )
 from . import models
 from .. import exceptions
@@ -326,6 +329,78 @@ class HandlersTest(unittest.TestCase):
 
         login_user_mock.assert_called_with(self.realm, payload)
         handle_error_response_mock.assert_called_with(login_user_mock.return_value)
+
+    @patch("app.auth.handlers.handle_error_response")
+    @patch("app.auth.api.logout")
+    def test_logout(self, logout_mock, handle_error_response_mock):
+        """logout: It can get logout an user"""
+        logout_mock.return_value = Mock(
+            spec=Response,
+            status_code=status.HTTP_200_OK,
+            json=Mock(return_value={}),
+        )
+        user_id = "test-user_id"
+        response = logout(self.realm, self.access_token, user_id)
+        self.assertEqual(response.loggedOut, True)
+        logout_mock.assert_called_with(self.realm, self.access_token, user_id)
+        handle_error_response_mock.assert_called_with(logout_mock.return_value)
+
+    @patch("app.auth.handlers.handle_error_response")
+    @patch("app.auth.api.send_reset_password_email")
+    def test_send_reset_password_email(
+        self, send_reset_password_email_mock, handle_error_response_mock
+    ):
+        """send_reset_password_email: It can send a reset pasword email"""
+        send_reset_password_email_mock.return_value = Mock(
+            spec=Response,
+            status_code=status.HTTP_200_OK,
+            json=Mock(return_value={}),
+        )
+        user_id = "test-user_id"
+        response = send_reset_password_email(self.realm, self.access_token, user_id)
+        self.assertEqual(response.emailSent, True)
+        send_reset_password_email_mock.assert_called_with(
+            self.realm, self.access_token, user_id
+        )
+        handle_error_response_mock.assert_called_with(
+            send_reset_password_email_mock.return_value
+        )
+
+    @patch("app.auth.handlers.handle_error_response")
+    @patch("app.auth.api.token_instrospect")
+    def test_get_user_basic_data(self, token_instrospect_mock, handle_error_response_mock):
+        """get_user_basic_data: It can the user basic data"""
+        json_data = {
+            "preferred_username": "test-username",
+            "email": "test-email@test.com",
+            "name": "Test User",
+            "given_name": "Test",
+            "family_name": "User",
+            "active": True,
+            "email_verified": True,
+        }
+
+        token_instrospect_mock.return_value = Mock(
+            spec=Response,
+            status_code=status.HTTP_200_OK,
+            json=Mock(return_value=json_data),
+        )
+        payload = models.UserBasicDataPayload(
+            clientId="test-client-id",
+            clientSecret="test-client-secret",
+        )
+        response = get_user_basic_data(self.realm, self.access_token, payload)
+
+        self.assertEqual(response.data.username, json_data["preferred_username"])
+        self.assertEqual(response.data.email, json_data["email"])
+        self.assertEqual(response.data.fullName, json_data["name"])
+        self.assertEqual(response.data.firstName, json_data["given_name"])
+        self.assertEqual(response.data.lastName, json_data["family_name"])
+        self.assertEqual(response.data.active, json_data["active"])
+        self.assertEqual(response.data.emailVerified, json_data["email_verified"])
+
+        token_instrospect_mock.assert_called()
+        handle_error_response_mock.assert_called_with(token_instrospect_mock.return_value)
 
 
 if __name__ == "__main__":

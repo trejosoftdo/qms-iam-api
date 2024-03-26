@@ -213,3 +213,51 @@ def login_user(realm: str, payload: models.LoginUserPayload) -> requests.Respons
     return requests.post(
         url, headers=common_headers, data=data, timeout=constants.TIMEOUT
     )
+
+
+def logout(realm: str, authorization: str, user_id: str) -> requests.Response:
+    """Logs out an existing user
+
+    Args:
+        realm (str): The realm in context
+        authorization (str): Authorization access token
+        user_id (str): The id of the user to log out
+
+    Returns:
+        requests.Response: The response from the auth API.
+    """
+    base_path = f"{get_admin_base_path()}{realm}{auth_consts.AUTH_USERS_PATH}"
+    url = f"{base_path}/{user_id}{auth_consts.AUTH_LOGOUT_PATH}"
+    return requests.post(
+        url,
+        headers={
+            "Content-Type": constants.JSON_CONTENT_TYPE,
+            "Authorization": authorization,
+        },
+        timeout=constants.TIMEOUT,
+    )
+
+
+def send_reset_password_email(
+    realm: str, authorization: str, user_id: str
+) -> requests.Response:
+    """Sends an email to reset the user password
+
+    Args:
+        realm (str): The realm in context
+        authorization (str): Authorization access token
+        user_id (str): The id of the user to send the reset password email
+
+    Returns:
+        requests.Response: The response from the auth API.
+    """
+    base_path = f"{get_admin_base_path()}{realm}{auth_consts.AUTH_USERS_PATH}"
+    url = f"{base_path}/{user_id}{auth_consts.AUTH_RESET_PASSWORD_EMAIL}"
+    return requests.put(
+        url,
+        headers={
+            "Content-Type": constants.JSON_CONTENT_TYPE,
+            "Authorization": authorization,
+        },
+        timeout=constants.TIMEOUT,
+    )

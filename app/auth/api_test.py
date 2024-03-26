@@ -21,6 +21,8 @@ from .api import (
     get_auth_tokens_for_credentials,
     register_new_user,
     login_user,
+    logout,
+    send_reset_password_email,
 )
 from . import models
 from . import constants as paths
@@ -250,6 +252,46 @@ class AuthAPITest(unittest.TestCase):
             timeout=TIMEOUT,
         )
 
+    @patch("app.auth.api.requests.post")
+    @patch(
+        "app.auth.api.environment",
+        mock_environment,
+    )
+    def test_logout(self, post_mock):
+        """logout: Logs out an existing user"""
+        post_mock.return_value = Mock(status_code=200)
+        user_id = "test-user-id"
+        response = logout(self.realm, self.authorization, user_id)
+        self.assertEqual(response, post_mock.return_value)
+        post_mock.assert_called_with(
+            f"{self.base_admin_path}{paths.AUTH_USERS_PATH}/{user_id}{paths.AUTH_LOGOUT_PATH}",
+            headers={
+                "Content-Type": JSON_CONTENT_TYPE,
+                "Authorization": self.authorization,
+            },
+            timeout=TIMEOUT,
+        )
+
+    @patch("app.auth.api.requests.put")
+    @patch(
+        "app.auth.api.environment",
+        mock_environment,
+    )
+    def test_send_reset_password_email(self, put_mock):
+        """send_reset_password_email: Sends an email to reset the user password"""
+        put_mock.return_value = Mock(status_code=200)
+        user_id = "test-user-id"
+        response = send_reset_password_email(self.realm, self.authorization, user_id)
+        self.assertEqual(response, put_mock.return_value)
+        base = f"{self.base_admin_path}{paths.AUTH_USERS_PATH}/{user_id}"
+        put_mock.assert_called_with(
+            f"{base}{paths.AUTH_RESET_PASSWORD_EMAIL}",
+            headers={
+                "Content-Type": JSON_CONTENT_TYPE,
+                "Authorization": self.authorization,
+            },
+            timeout=TIMEOUT,
+        )
 
 if __name__ == "__main__":
     unittest.main()

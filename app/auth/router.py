@@ -25,14 +25,6 @@ def authorize_device(
     application: str = Header(..., convert_underscores=False),
 ) -> models.AuthorizeDeviceResponse:
     """Authorize a device to an application in context
-
-    Args:
-        payload (models.AuthorizeDevicePayload): The required payload
-        application (str, optional): The application in context
-
-    Returns:
-        models.AuthorizeDeviceResponse: Authorization information such as deviceCode,
-        and userCode.
     """
     return handlers.authorize_device(application, payload)
 
@@ -50,13 +42,6 @@ async def get_auth_tokens(
     application: str = Header(..., convert_underscores=False),
 ) -> models.GetTokensResponse:
     """Gets the authorization tokens for the given device code and application in context
-
-    Args:
-        payload (models.GetTokensPayload): The required payload
-        application (str, optional): The application in context
-
-    Returns:
-        models.GetTokensResponse: The authorization tokens information
     """
     return handlers.get_auth_tokens(application, payload)
 
@@ -74,13 +59,6 @@ async def get_new_access_token(
     application: str = Header(..., convert_underscores=False),
 ) -> models.GetNewAccessTokenResponse:
     """Gets a new access token for the given refresh token and application in context
-
-    Args:
-        payload (models.GetNewAccessTokenPayload): The required payload
-        application (str, optional): The application in context
-
-    Returns:
-        models.GetNewAccessTokenResponse: The new access token information
     """
     return handlers.get_new_access_token(application, payload)
 
@@ -99,16 +77,25 @@ async def validate_access_token(
     authorization: str = Header(..., convert_underscores=False),
 ) -> models.ValidateAccessTokenResponse:
     """Validates a token checking if it has not expired and has the required scope
-
-    Args:
-        payload (models.ValidateAccessTokenPayload): The required payload
-        application (str, optional): The application in context
-        authorization (str, optional): The authorization access token
-
-    Returns:
-        models.ValidateAccessTokenResponse: The new access token information
     """
     return handlers.validate_access_token(application, authorization, payload)
+
+
+@router.post(
+    constants.USER_BASIC_DATA_PATH,
+    dependencies=[Depends(helpers.validate_api_access)],
+    tags=constants.TAGS,
+    operation_id=constants.GET_USER_BASIC_DATA_OPERATION_ID,
+    response_model=models.UserBasicDataResponse,
+    responses=responses.responses_descriptions,
+)
+async def get_user_basic_data(
+    payload: models.UserBasicDataPayload,
+    application: str = Header(..., convert_underscores=False),
+    authorization: str = Header(..., convert_underscores=False),
+) -> models.UserBasicDataResponse:
+    """Gets the user basic data for the authorization token"""
+    return handlers.get_user_basic_data(application, authorization, payload)
 
 
 @router.post(
@@ -123,8 +110,7 @@ def get_auth_tokens_for_credentials(
     payload: models.GetTokensForCredentialsPayload,
     application: str = Header(..., convert_underscores=False),
 ) -> models.GetTokensForCredentialsResponse:
-    """Gets the authorization tokens for the credentials and realm in context
-    """
+    """Gets the authorization tokens for the credentials and realm in context"""
     return handlers.get_auth_tokens_for_credentials(application, payload)
 
 
@@ -141,8 +127,7 @@ def register_new_user(
     application: str = Header(..., convert_underscores=False),
     authorization: str = Header(..., convert_underscores=False),
 ) -> models.RegisterUserResponse:
-    """Registers a new user
-    """
+    """Registers a new user"""
     return handlers.register_new_user(application, authorization, payload)
 
 
@@ -158,6 +143,39 @@ def login_user(
     payload: models.LoginUserPayload,
     application: str = Header(..., convert_underscores=False),
 ) -> models.LoginUserResponse:
-    """Logs in an user
-    """
+    """Logs in an user"""
     return handlers.login_user(application, payload)
+
+
+@router.post(
+    "/{user_id}/logout",
+    dependencies=[Depends(helpers.validate_api_access)],
+    tags=constants.TAGS,
+    operation_id=constants.LOGOUT_OPERATION_ID,
+    response_model=models.LogoutResponse,
+    responses=responses.responses_descriptions,
+)
+async def logout(
+    user_id: str,
+    application: str = Header(..., convert_underscores=False),
+    authorization: str = Header(..., convert_underscores=False),
+) -> models.LogoutResponse:
+    """Logs out an existing user"""
+    return handlers.logout(application, authorization, user_id)
+
+
+@router.put(
+    "/{user_id}/reset-password-email",
+    dependencies=[Depends(helpers.validate_api_access)],
+    tags=constants.TAGS,
+    operation_id=constants.SEND_RESET_PASSWORD_EMAIL,
+    response_model=models.SendResetPasswordEmailResponse,
+    responses=responses.responses_descriptions,
+)
+async def send_reset_password_email(
+    user_id: str,
+    application: str = Header(..., convert_underscores=False),
+    authorization: str = Header(..., convert_underscores=False),
+) -> models.SendResetPasswordEmailResponse:
+    """Sends an email to reset the user password"""
+    return handlers.send_reset_password_email(application, authorization, user_id)

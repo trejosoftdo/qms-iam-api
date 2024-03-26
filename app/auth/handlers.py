@@ -140,6 +140,49 @@ def validate_access_token(
     )
 
 
+def get_user_basic_data(
+    realm: str, authorization: str, payload: models.UserBasicDataPayload
+) -> models.UserBasicDataResponse:
+    """Gets the user basic information
+
+    Args:
+        realm (str): The realm in context
+        authorization (str): The authorization access token
+        payload (models.UserBasicDataPayload): The required payload to get user data
+
+    Returns:
+        models.UserBasicDataResponse: The user data
+    """
+    access_token = authorization.replace(
+        constants.BEARER_PORTION, constants.EMPTY_VALUE
+    )
+    instrospect_payload = models.ValidateAccessTokenPayload(
+        clientId=payload.clientId,
+        clientSecret=payload.clientSecret,
+        expectedScope="email",
+    )
+    response = api.token_instrospect(
+        realm,
+        access_token,
+        instrospect_payload,
+    )
+
+    handle_error_response(response)
+
+    data = response.json()
+    return models.UserBasicDataResponse(
+        data=models.UserBasicData(
+            username=data.get("preferred_username", constants.EMPTY_VALUE),
+            email=data.get("email", constants.EMPTY_VALUE),
+            fullName=data.get("name", constants.EMPTY_VALUE),
+            firstName=data.get("given_name", constants.EMPTY_VALUE),
+            lastName=data.get("family_name", constants.EMPTY_VALUE),
+            active=data.get("active", False),
+            emailVerified=data.get("email_verified", False),
+        )
+    )
+
+
 def get_auth_tokens_for_credentials(
     realm: str, payload: models.GetTokensForCredentialsPayload
 ) -> models.GetTokensForCredentialsResponse:
@@ -183,12 +226,12 @@ def register_new_user(
 
     handle_error_response(response)
 
-    return models.RegisterUserResponse(
-        registered = True
-    )
+    return models.RegisterUserResponse(registered=True)
 
 
-def login_user(realm: str, payload: models.LoginUserPayload) -> models.LoginUserResponse:
+def login_user(
+    realm: str, payload: models.LoginUserPayload
+) -> models.LoginUserResponse:
     """Logins an user
 
     Args:
@@ -212,3 +255,41 @@ def login_user(realm: str, payload: models.LoginUserPayload) -> models.LoginUser
             refreshExpiresIn=data.get("refresh_expires_in"),
         )
     )
+
+
+def logout(realm: str, authorization: str, user_id: str) -> models.LogoutResponse:
+    """Logs out an existing user
+
+    Args:
+        realm (str): The realm in context
+        authorization (str): Admin authorization access token
+        user_id (str): Id of the user to log out
+
+    Returns:
+        models.LogoutResponse: The response
+    """
+    response = api.logout(realm, authorization, user_id)
+
+    handle_error_response(response)
+
+    return models.LogoutResponse(loggedOut=True)
+
+
+def send_reset_password_email(
+    realm: str, authorization: str, user_id: str
+) -> models.SendResetPasswordEmailResponse:
+    """Sends an email to reset the user password
+
+    Args:
+        realm (str): The realm in context
+        authorization (str): Admin authorization access token
+        user_id (str): The id of the user to send the reset password email
+
+    Returns:
+        models.SendResetPasswordEmailResponse: The response
+    """
+    response = api.send_reset_password_email(realm, authorization, user_id)
+
+    handle_error_response(response)
+
+    return models.SendResetPasswordEmailResponse(emailSent=True)

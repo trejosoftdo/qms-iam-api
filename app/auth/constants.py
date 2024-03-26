@@ -11,6 +11,9 @@ VALIDATE_ACCESS_TOKEN_OPERATION_ID = "validateAccessToken"
 TOKENS_FOR_CREDENTIALS_OPERATION_ID="getAuthTokensForCredentials"
 REGISTER_USER_OPERATION_ID = "registerUser"
 LOGIN_USER_OPERATION_ID = "loginUser"
+GET_USER_BASIC_DATA_OPERATION_ID="getUserBasicData"
+LOGOUT_OPERATION_ID="logout"
+SEND_RESET_PASSWORD_EMAIL="sendResetPasswordEmail"
 
 # External API paths
 AUTH_DEVICE_PATH = "/protocol/openid-connect/auth/device"
@@ -19,6 +22,7 @@ INSTROSPECT_PATH = "/protocol/openid-connect/token/introspect"
 AUTH_USERS_PATH = "/users"
 REALMS_PATH = "/realms/"
 ADMIN_PATH = "/admin"
+AUTH_RESET_PASSWORD_EMAIL = "/reset-password-email"
 
 # Route paths
 DEVICE_ROUTE_PATH = "/device"
@@ -28,3 +32,5 @@ TOKEN_REFRESH_ROUTE_PATH = "/token/refresh"
 TOKEN_VALIDATE_ROUTE_PATH = "/token/validate"
 REGISTER_ROUTE_PATH = "/register"
 LOGIN_ROUTE_PATH = "/login"
+AUTH_LOGOUT_PATH = "/logout"
+USER_BASIC_DATA_PATH="/user-basic-data"
