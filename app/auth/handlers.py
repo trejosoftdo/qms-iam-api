@@ -170,6 +170,12 @@ def get_user_basic_data(
     handle_error_response(response)
 
     data = response.json()
+
+    is_valid = data.get(constants.ACTIVE_PROPERTY) is True
+
+    if  not is_valid:
+        raise exceptions.UNAUTHORIZED_ERROR
+
     return models.UserBasicDataResponse(
         data=models.UserBasicData(
             username=data.get("preferred_username", constants.EMPTY_VALUE),

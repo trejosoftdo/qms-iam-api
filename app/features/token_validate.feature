@@ -15,7 +15,7 @@ Feature: Token validation endpoint
         Then the response status is "HTTP_200_OK"
         And the response property "data.isValid" is equal to "True"
         And the response property "data.isAuthorized" is equal to "True"
-        And the response property "data.expectedScope" is equal to "read_categories"
+        And the response property "data.expectedScope" is equal to "read_categories email profile"
 
 
     Scenario: Token validation validation errors
@@ -43,7 +43,7 @@ Feature: Token validation endpoint
         Then the response status is "HTTP_200_OK"
         And the response property "data.isValid" is equal to "False"
         And the response property "data.isAuthorized" is equal to "False"
-        And the response property "data.expectedScope" is equal to "read_categories"
+        And the response property "data.expectedScope" is equal to "read_categories email profile"
 
 
     Scenario: Token validation with bad credentials
@@ -52,7 +52,7 @@ Feature: Token validation endpoint
         Then the response status is "HTTP_200_OK"
         And the response property "data.isValid" is equal to "False"
         And the response property "data.isAuthorized" is equal to "False"
-        And the response property "data.expectedScope" is equal to "read_categories"
+        And the response property "data.expectedScope" is equal to "read_categories email profile"
 
 
     Scenario: Token validation  with invalid key

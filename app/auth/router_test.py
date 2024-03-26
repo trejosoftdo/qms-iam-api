@@ -233,8 +233,74 @@ class RouterTest(unittest.TestCase):
         )
         self.assertEqual(response.json(), login_user_mock.return_value)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        login_user_mock.assert_called_with(
-            self.application, payload
+        login_user_mock.assert_called_with(self.application, payload)
+
+    @patch("app.helpers.environment")
+    @patch("app.auth.handlers.logout")
+    def test_logout(self, logout_mock, environment_mock):
+        """logout: It can log out an existing user"""
+        environment_mock.allowed_api_keys = self.api_key
+        environment_mock.allowed_ip_adresses = self.host
+
+        logout_mock.return_value = models.LogoutResponse(loggedOut=True)
+        user_id = "test-user_id"
+        response = self.client.post(
+            f"{constants.AUTH_ROUTE_PREFIX}/{user_id}{auth_constants.AUTH_LOGOUT_PATH}",
+            headers=self.headers,
+        )
+        self.assertEqual(response.json(), logout_mock.return_value)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        logout_mock.assert_called_with(self.application, self.authorization, user_id)
+
+    @patch("app.helpers.environment")
+    @patch("app.auth.handlers.send_reset_password_email")
+    def test_send_reset_password_email(self, send_mock, environment_mock):
+        """send_reset_password_email: It can send a reset password email for existing users"""
+        environment_mock.allowed_api_keys = self.api_key
+        environment_mock.allowed_ip_adresses = self.host
+
+        send_mock.return_value = models.SendResetPasswordEmailResponse(emailSent=True)
+        user_id = "test-user_id"
+        response = self.client.put(
+            f"{constants.AUTH_ROUTE_PREFIX}/{user_id}{auth_constants.AUTH_RESET_PASSWORD_EMAIL}",
+            headers=self.headers,
+        )
+        self.assertEqual(response.json(), send_mock.return_value)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        send_mock.assert_called_with(self.application, self.authorization, user_id)
+
+    @patch("app.helpers.environment")
+    @patch("app.auth.handlers.get_user_basic_data")
+    def test_get_user_basic_data(self, basic_data_mock, environment_mock):
+        """get_user_basic_data: It can log out an existing user"""
+        environment_mock.allowed_api_keys = self.api_key
+        environment_mock.allowed_ip_adresses = self.host
+
+        payload = models.UserBasicDataPayload(
+            clientId="test-client-id",
+            clientSecret="test-client-secret",
+        )
+        basic_data_mock.return_value = models.UserBasicDataResponse(
+            data=models.UserBasicData(
+                username="test-username",
+                email="test-email@test.com",
+                fullName="Test User",
+                firstName="Test",
+                lastName="User",
+                active=True,
+                emailVerified=True,
+            )
+        )
+
+        response = self.client.post(
+            f"{constants.AUTH_ROUTE_PREFIX}{auth_constants.USER_BASIC_DATA_PATH}",
+            headers=self.headers,
+            json=payload.dict(),
+        )
+        self.assertEqual(response.json(), basic_data_mock.return_value)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        basic_data_mock.assert_called_with(
+            self.application, self.authorization, payload
         )
 
 

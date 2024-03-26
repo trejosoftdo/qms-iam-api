@@ -5,6 +5,7 @@
 import re
 from fastapi import status
 from behave import given, when, then
+from app.features import constants
 
 
 def find(data, path):
@@ -33,6 +34,15 @@ def step_set_request_path(context, path):
         path (string): endpoint path
     """
     context.path = path
+
+    if path == constants.AUTH_LOGOUT_PATH:
+        context.payloads[context.user_logout_path] = context.payloads[context.path].copy()
+        context.path = context.user_logout_path
+
+    if path == constants.AUTH_RESET_PASSWORD_EMAIL_PATH:
+        email_path = context.user_reset_password_email_path
+        context.payloads[email_path] = context.payloads[context.path].copy()
+        context.path = email_path
 
 
 @given('"{payload_name}" request json payload')
