@@ -13,3 +13,4 @@ coverage==7.4.1
 behave==1.2.6
 selenium==4.17.2
 webdriver_manager==4.0.1
+PyJWT==2.8.0
