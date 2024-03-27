@@ -26,10 +26,10 @@ Feature: Get access tokens for credentials endpoint
     Scenario: Get access tokens with bad credentials
         Given "BAD_CREDENTIALS" request json payload
         When the request sends "POST"
-        Then the response status is "HTTP_500_INTERNAL_SERVER_ERROR"
-        And the response property "code" is equal to "INTERNAL_SERVER_ERROR"
-        And the response property "type" is equal to "INTERNAL_ERROR"
-        And the response property "message" is equal to "Internal Server Error"
+        Then the response status is "HTTP_401_UNAUTHORIZED"
+        And the response property "code" is equal to "UNAUTHORIZED"
+        And the response property "type" is equal to "AUTHORIZATION_ERROR"
+        And the response property "message" is equal to "Unauthorized"
 
 
     Scenario: Get access tokens  with invalid key

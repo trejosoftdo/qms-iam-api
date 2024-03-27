@@ -3,7 +3,7 @@
 # pylint: disable=C0301
 
 INVALID_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUZXN0IEpXVCBCdWlsZGVyIiwiaWF0IjoxNzA4MzQ1NTUwLCJleHAiOjE3Mzk4ODE1NTAsImF1ZCI6Ind3dy5leGFtcGxlLmNvbSIsInN1YiI6Impkb2VAZXhhbXBsZS5jb20iLCJHaXZlbk5hbWUiOiJKb2huIiwiU3VybmFtZSI6IkRvZSIsIkVtYWlsIjoiamRvZUBleGFtcGxlLmNvbSIsIlJvbGUiOlsiVGVzdGVyIiwiUHJvamVjdCB0ZXN0ZXIiXX0.YeFRs0nkqBthQ-xhXSnP032CInfL3vRuRPSqWm9Ii2Q"
-TEST_VALID_SCOPE = "read_categories"
+TEST_VALID_SCOPE = "read_categories email profile"
 TEST_INVALID_SCOPE = "execute_categories"
 TEST_INVALID_DEVICE_CODE = "test-code"
 TEST_REFRESH_TOKEN = "test-refresh-token"
@@ -18,6 +18,9 @@ AUTH_REFRESH_TOKEN_PATH = "/api/v1/auth/token/refresh"
 AUTH_VALIDATE_TOKEN_PATH = "/api/v1/auth/token/validate"
 AUTH_REGISTER_USER_PATH = "/api/v1/auth/register"
 AUTH_LOGIN_USER_PATH = "/api/v1/auth/login"
+AUTH_LOGOUT_PATH = "/api/v1/auth/:user/logout"
+AUTH_RESET_PASSWORD_EMAIL_PATH = "/api/v1/auth/:user/reset-password-email"
+AUTH_USER_BASIC_DATA_PATH = "/api/v1/auth/user-basic-data"
 
 # Driver options
 DRIVER_HEADLESS_MODE_OPTION = "--headless"

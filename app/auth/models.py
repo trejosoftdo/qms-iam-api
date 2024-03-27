@@ -108,6 +108,35 @@ class GetNewAccessTokenResponse(BaseModel):
     data: GetNewAccessTokenResponseData
 
 
+
+
+class UserBasicDataPayload(BaseModel):
+    """User Basic Data Payload
+    """
+
+    clientId: str
+    clientSecret: str
+
+
+class UserBasicData(BaseModel):
+    """User Basic Data
+    """
+
+    username: str
+    email: str
+    fullName: str
+    firstName: str
+    lastName: str
+    active: bool
+    emailVerified: bool
+
+class UserBasicDataResponse(BaseModel):
+    """User Basic Data Response
+    """
+
+    data: UserBasicData
+
+
 class ValidateAccessTokenPayload(BaseModel):
     """Validate Access Token Payload
 
@@ -233,3 +262,17 @@ class LoginUserResponse(BaseModel):
     """
 
     data: LoginUserResponseData
+
+
+class LogoutResponse(BaseModel):
+    """Logout Response
+    """
+
+    loggedOut: bool
+
+
+class SendResetPasswordEmailResponse(BaseModel):
+    """Send Reset Password Email Response
+    """
+
+    emailSent: bool

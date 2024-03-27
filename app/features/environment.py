@@ -87,6 +87,15 @@ def setup_payloads(context, *args, **kwargs):
                 "scope": constants.TEST_VALID_SCOPE,
             },
         },
+        constants.AUTH_USER_BASIC_DATA_PATH: {
+            "VALID": {
+                **api_valid_credentials,
+            },
+            "INVALID": {},
+            "BAD_CREDENTIALS": {
+                **api_invalid_credentials,
+            },
+        },
         constants.AUTH_TOKENS_PATH: {
             "VALID": {**api_valid_credentials},
             "INVALID": {},
@@ -96,6 +105,20 @@ def setup_payloads(context, *args, **kwargs):
             },
         },
         constants.AUTH_TOKENS_FOR_CREDENCIALS_PATH: {
+            "VALID": {**admin_api_valid_credentials},
+            "INVALID": {},
+            "BAD_CREDENTIALS": {
+                **api_invalid_credentials,
+            },
+        },
+        constants.AUTH_LOGOUT_PATH: {
+            "VALID": {**admin_api_valid_credentials},
+            "INVALID": {},
+            "BAD_CREDENTIALS": {
+                **api_invalid_credentials,
+            },
+        },
+        constants.AUTH_RESET_PASSWORD_EMAIL_PATH: {
             "VALID": {**admin_api_valid_credentials},
             "INVALID": {},
             "BAD_CREDENTIALS": {

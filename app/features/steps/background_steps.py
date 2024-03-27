@@ -6,6 +6,7 @@ import time
 from fastapi import status
 from selenium.webdriver.common.by import By
 from behave import given
+import jwt
 from app.features import constants
 from app.features.helpers import get_user_register_payload
 
@@ -162,3 +163,35 @@ def step_register_user(context):
         "username": register_payload["username"],
         "password": register_payload["password"],
     }
+
+
+@given("the user has obtained access token")
+def step_obtain_user_access_tokens(context):
+    """Obtains an user access tokens
+
+    Args:
+        context (Any): Test context
+    """
+    response = context.client.post(
+        constants.AUTH_LOGIN_USER_PATH,
+        json=context.payloads[constants.AUTH_LOGIN_USER_PATH]["VALID"],
+        headers=context.common_headers,
+    )
+    assert response.status_code == status.HTTP_200_OK
+    data = response.json()
+    token = data.get('data', {})['accessToken']
+    decoded_data = jwt.decode(token, options={"verify_signature": False})
+    context.user_logout_path = f"/api/v1/auth/{decoded_data['sub']}/logout"
+    reset_email_path = f"/api/v1/auth/{decoded_data['sub']}/reset-password-email"
+    context.user_reset_password_email_path = reset_email_path
+    context.user_access_token = token
+
+
+@given("the user access token it is used")
+def step_use_user_access_token(context):
+    """Uses the user obtained access token
+
+    Args:
+        context (Any): Test context
+    """
+    context.headers = {"authorization": f"Bearer {context.user_access_token}"}
