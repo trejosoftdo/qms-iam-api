@@ -347,18 +347,35 @@ class HandlersTest(unittest.TestCase):
 
     @patch("app.auth.handlers.handle_error_response")
     @patch("app.auth.api.send_reset_password_email")
+    @patch("app.auth.api.get_users_by_email")
     def test_send_reset_password_email(
-        self, send_reset_password_email_mock, handle_error_response_mock
+        self,
+        get_users_by_email_mock,
+        send_reset_password_email_mock,
+        handle_error_response_mock
     ):
         """send_reset_password_email: It can send a reset pasword email"""
+        user_id = "test-user-id"
+        email = "test-user@test.com"
+        get_users_by_email_mock.return_value = Mock(
+            spec=Response,
+            status_code=status.HTTP_200_OK,
+            json=Mock(return_value=[
+                {
+                    "id": user_id,
+                }
+            ]),
+        )
         send_reset_password_email_mock.return_value = Mock(
             spec=Response,
             status_code=status.HTTP_200_OK,
             json=Mock(return_value={}),
         )
-        user_id = "test-user_id"
-        response = send_reset_password_email(self.realm, self.access_token, user_id)
+        response = send_reset_password_email(self.realm, self.access_token, email)
         self.assertEqual(response.emailSent, True)
+        get_users_by_email_mock.assert_called_with(
+            self.realm, self.access_token, email
+        )
         send_reset_password_email_mock.assert_called_with(
             self.realm, self.access_token, user_id
         )
@@ -371,6 +388,7 @@ class HandlersTest(unittest.TestCase):
     def test_get_user_basic_data(self, token_instrospect_mock, handle_error_response_mock):
         """get_user_basic_data: It can the user basic data"""
         json_data = {
+            "sub": "test-user-id",
             "preferred_username": "test-username",
             "email": "test-email@test.com",
             "name": "Test User",
@@ -391,6 +409,7 @@ class HandlersTest(unittest.TestCase):
         )
         response = get_user_basic_data(self.realm, self.access_token, payload)
 
+        self.assertEqual(response.data.id, json_data["sub"])
         self.assertEqual(response.data.username, json_data["preferred_username"])
         self.assertEqual(response.data.email, json_data["email"])
         self.assertEqual(response.data.fullName, json_data["name"])

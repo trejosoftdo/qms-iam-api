@@ -23,6 +23,7 @@ from .api import (
     login_user,
     logout,
     send_reset_password_email,
+    get_users_by_email,
 )
 from . import models
 from . import constants as paths
@@ -286,6 +287,26 @@ class AuthAPITest(unittest.TestCase):
         base = f"{self.base_admin_path}{paths.AUTH_USERS_PATH}/{user_id}"
         put_mock.assert_called_with(
             f"{base}{paths.AUTH_RESET_PASSWORD_EMAIL}",
+            headers={
+                "Content-Type": JSON_CONTENT_TYPE,
+                "Authorization": self.authorization,
+            },
+            timeout=TIMEOUT,
+        )
+
+    @patch("app.auth.api.requests.get")
+    @patch(
+        "app.auth.api.environment",
+        mock_environment,
+    )
+    def test_get_users_by_email(self, get_mock):
+        """get_users_by_email: Gets users by email"""
+        get_mock.return_value = Mock(status_code=200)
+        email = "test-user@test.com"
+        response = get_users_by_email(self.realm, self.authorization, email)
+        self.assertEqual(response, get_mock.return_value)
+        get_mock.assert_called_with(
+            f"{self.base_admin_path}{paths.AUTH_USERS_PATH}?email={email}",
             headers={
                 "Content-Type": JSON_CONTENT_TYPE,
                 "Authorization": self.authorization,

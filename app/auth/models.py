@@ -122,6 +122,7 @@ class UserBasicData(BaseModel):
     """User Basic Data
     """
 
+    id: str
     username: str
     email: str
     fullName: str

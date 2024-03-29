@@ -178,6 +178,7 @@ def get_user_basic_data(
 
     return models.UserBasicDataResponse(
         data=models.UserBasicData(
+            id=data.get("sub", constants.EMPTY_VALUE),
             username=data.get("preferred_username", constants.EMPTY_VALUE),
             email=data.get("email", constants.EMPTY_VALUE),
             fullName=data.get("name", constants.EMPTY_VALUE),
@@ -282,18 +283,21 @@ def logout(realm: str, authorization: str, user_id: str) -> models.LogoutRespons
 
 
 def send_reset_password_email(
-    realm: str, authorization: str, user_id: str
+    realm: str, authorization: str, email: str
 ) -> models.SendResetPasswordEmailResponse:
     """Sends an email to reset the user password
 
     Args:
         realm (str): The realm in context
         authorization (str): Admin authorization access token
-        user_id (str): The id of the user to send the reset password email
+        email (str): Email of the user
 
     Returns:
         models.SendResetPasswordEmailResponse: The response
     """
+    users_response = api.get_users_by_email(realm, authorization, email)
+    users = users_response.json()
+    user_id = users[0].get('id')
     response = api.send_reset_password_email(realm, authorization, user_id)
 
     handle_error_response(response)

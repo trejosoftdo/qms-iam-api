@@ -182,7 +182,7 @@ def step_obtain_user_access_tokens(context):
     token = data.get('data', {})['accessToken']
     decoded_data = jwt.decode(token, options={"verify_signature": False})
     context.user_logout_path = f"/api/v1/auth/{decoded_data['sub']}/logout"
-    reset_email_path = f"/api/v1/auth/{decoded_data['sub']}/reset-password-email"
+    reset_email_path = f"/api/v1/auth/reset-password-email?email={decoded_data['email']}"
     context.user_reset_password_email_path = reset_email_path
     context.user_access_token = token
 
