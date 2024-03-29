@@ -165,7 +165,7 @@ async def logout(
 
 
 @router.put(
-    "/{user_id}/reset-password-email",
+    constants.AUTH_RESET_PASSWORD_EMAIL,
     dependencies=[Depends(helpers.validate_api_access)],
     tags=constants.TAGS,
     operation_id=constants.SEND_RESET_PASSWORD_EMAIL,
@@ -173,9 +173,9 @@ async def logout(
     responses=responses.responses_descriptions,
 )
 async def send_reset_password_email(
-    user_id: str,
+    email: str,
     application: str = Header(..., convert_underscores=False),
     authorization: str = Header(..., convert_underscores=False),
 ) -> models.SendResetPasswordEmailResponse:
     """Sends an email to reset the user password"""
-    return handlers.send_reset_password_email(application, authorization, user_id)
+    return handlers.send_reset_password_email(application, authorization, email)

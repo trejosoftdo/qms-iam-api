@@ -138,7 +138,7 @@ def setup_payloads(context, *args, **kwargs):
         constants.AUTH_VALIDATE_TOKEN_PATH: {
             "VALID": {
                 **api_valid_credentials,
-                "expectedScope": constants.TEST_VALID_SCOPE,
+                "expectedScope": constants.TEST_EXPECTED_SCOPE,
             },
             "INVALID_SCOPE": {
                 **api_valid_credentials,
@@ -147,7 +147,7 @@ def setup_payloads(context, *args, **kwargs):
             "INVALID": {},
             "BAD_CREDENTIALS": {
                 **api_invalid_credentials,
-                "expectedScope": constants.TEST_VALID_SCOPE,
+                "expectedScope": constants.TEST_EXPECTED_SCOPE,
             },
         },
         constants.AUTH_REGISTER_USER_PATH: {

@@ -261,3 +261,26 @@ def send_reset_password_email(
         },
         timeout=constants.TIMEOUT,
     )
+
+def get_users_by_email(
+    realm: str, authorization: str, email: str
+) -> requests.Response:
+    """Gets users by email
+
+    Args:
+        realm (str): The realm in context
+        authorization (str): Authorization access token
+        email (str): The email of the user
+
+    Returns:
+        requests.Response: The response from the auth API.
+    """
+    url = f"{get_admin_base_path()}{realm}{auth_consts.AUTH_USERS_PATH}?email={email}"
+    return requests.get(
+        url,
+        headers={
+            "Content-Type": constants.JSON_CONTENT_TYPE,
+            "Authorization": authorization,
+        },
+        timeout=constants.TIMEOUT,
+    )

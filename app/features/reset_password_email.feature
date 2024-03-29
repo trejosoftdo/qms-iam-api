@@ -6,7 +6,7 @@ Feature: Reset password email endpoint
       Given an admin access token has been obtained
       And an user has been registered
       And the user has obtained access token
-      And a request url "/api/v1/auth/:user/reset-password-email"
+      And a request url "/api/v1/auth/reset-password-email"
 
 
     Scenario: Reset password email failure

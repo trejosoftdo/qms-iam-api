@@ -260,14 +260,15 @@ class RouterTest(unittest.TestCase):
         environment_mock.allowed_ip_adresses = self.host
 
         send_mock.return_value = models.SendResetPasswordEmailResponse(emailSent=True)
-        user_id = "test-user_id"
+        email = "test-user@test.com"
+        base_path = f"{constants.AUTH_ROUTE_PREFIX}{auth_constants.AUTH_RESET_PASSWORD_EMAIL}"
         response = self.client.put(
-            f"{constants.AUTH_ROUTE_PREFIX}/{user_id}{auth_constants.AUTH_RESET_PASSWORD_EMAIL}",
+            f"{base_path}?email={email}",
             headers=self.headers,
         )
         self.assertEqual(response.json(), send_mock.return_value)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        send_mock.assert_called_with(self.application, self.authorization, user_id)
+        send_mock.assert_called_with(self.application, self.authorization, email)
 
     @patch("app.helpers.environment")
     @patch("app.auth.handlers.get_user_basic_data")
@@ -282,6 +283,7 @@ class RouterTest(unittest.TestCase):
         )
         basic_data_mock.return_value = models.UserBasicDataResponse(
             data=models.UserBasicData(
+                id="test-user-id",
                 username="test-username",
                 email="test-email@test.com",
                 fullName="Test User",
