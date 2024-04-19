@@ -69,6 +69,7 @@ def setup_payloads(context, *args, **kwargs):
     admin_api_valid_credentials = {
         "clientId": test_auth_admin_api_client_id,
         "clientSecret": test_auth_admin_api_client_secret,
+        "scope": "email profile",
     }
     api_invalid_credentials = {
         "clientId": constants.TEST_BAD_CLIENT_ID,
@@ -109,6 +110,7 @@ def setup_payloads(context, *args, **kwargs):
             "INVALID": {},
             "BAD_CREDENTIALS": {
                 **api_invalid_credentials,
+                "scope": "email profile"
             },
         },
         constants.AUTH_LOGOUT_PATH: {

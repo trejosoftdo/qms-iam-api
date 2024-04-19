@@ -162,6 +162,7 @@ class RouterTest(unittest.TestCase):
         payload = models.GetTokensForCredentialsPayload(
             clientId="test-client-id",
             clientSecret="test-client-secret",
+            scope="test-scope",
         )
         response = self.client.post(
             f"{constants.AUTH_ROUTE_PREFIX}{auth_constants.TOKENS_FOR_CREDENTIALS_ROUTE_PATH}",

@@ -40,6 +40,7 @@ def delete_test_users(context):
         json={
             "clientId": test_auth_admin_api_client_id,
             "clientSecret": test_auth_admin_api_client_secret,
+            "scope": "email profile",
         },
         headers={
             **context.common_headers,
