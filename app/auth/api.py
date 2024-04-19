@@ -149,6 +149,7 @@ def get_auth_tokens_for_credentials(
             "grant_type": constants.CLIENT_CREDENTIALS_GRANT_TYPE,
             "client_id": payload.clientId,
             "client_secret": payload.clientSecret,
+            "scope": payload.scope,
         }
     )
     return requests.post(

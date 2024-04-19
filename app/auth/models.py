@@ -181,6 +181,7 @@ class GetTokensForCredentialsPayload(BaseModel):
 
     clientId: str
     clientSecret: str
+    scope: str
 
 
 class GetTokensForCredentialsResponseData(BaseModel):

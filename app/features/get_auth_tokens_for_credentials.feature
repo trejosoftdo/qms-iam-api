@@ -20,7 +20,7 @@ Feature: Get access tokens for credentials endpoint
         Then the response status is "HTTP_400_BAD_REQUEST"
         And the response property "code" is equal to "BAD_REQUEST"
         And the response property "type" is equal to "VALIDATION_ERROR"
-        And the response property "message" is equal to "field required (body.clientId). field required (body.clientSecret)"
+        And the response property "message" is equal to "field required (body.clientId). field required (body.clientSecret). field required (body.scope)"
 
 
     Scenario: Get access tokens with bad credentials

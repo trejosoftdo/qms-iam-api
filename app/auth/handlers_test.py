@@ -251,6 +251,7 @@ class HandlersTest(unittest.TestCase):
         payload = models.GetTokensForCredentialsPayload(
             clientId="test-client-id",
             clientSecret="test-client-secret",
+            scope="test-scope",
         )
         response = get_auth_tokens_for_credentials(self.realm, payload)
 

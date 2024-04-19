@@ -170,6 +170,7 @@ class AuthAPITest(unittest.TestCase):
         data = models.GetTokensForCredentialsPayload(
             clientId="test-client-id",
             clientSecret="test-client-secret",
+            scope="test-scope",
         )
         response = get_auth_tokens_for_credentials(self.realm, data)
         self.assertEqual(response, post_mock.return_value)
@@ -181,6 +182,7 @@ class AuthAPITest(unittest.TestCase):
                     "grant_type": CLIENT_CREDENTIALS_GRANT_TYPE,
                     "client_id": data.clientId,
                     "client_secret": data.clientSecret,
+                    "scope": data.scope,
                 }
             ),
             timeout=TIMEOUT,
